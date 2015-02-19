@@ -20,7 +20,7 @@ namespace SESample
     class SaltEdge
     {
         const int REQUEST_EXPIRES_MINUTES = 3;
-        const string CLIENT_ID            = "CLIENT_ID"
+        const string CLIENT_ID            = "CLIENT_ID";
         const string SERIVICE_SECRET      = "CLIENT_SECRET";
         const string PRIVATE_KEY_PATH     = @"c:\keys\tt.pem";
 

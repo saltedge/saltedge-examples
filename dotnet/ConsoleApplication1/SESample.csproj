@@ -55,7 +55,7 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RestClient.cs" />
+    <Compile Include="SaltEdge.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
