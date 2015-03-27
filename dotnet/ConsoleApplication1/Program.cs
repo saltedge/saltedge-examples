@@ -21,7 +21,7 @@ namespace SESample
             //     }
             // };
             //
-            // string result = RestClient.post("https://www.saltedge.com/api/v2/customers/", payload);
+            // string result = SaltEdge.post("https://www.saltedge.com/api/v2/customers/", payload);
             // System.Console.WriteLine(result);
             System.Console.ReadKey();
         }
