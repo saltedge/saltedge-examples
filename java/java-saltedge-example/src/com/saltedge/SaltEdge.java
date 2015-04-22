@@ -49,7 +49,7 @@ public class SaltEdge {
 			return "";
 		} 
 		//add request header
-		int expires = generateExpiresAt();
+		long expires = generateExpiresAt();
 		con.setRequestProperty("Signature", generateSignature("GET", expires, url, ""));
 		con.setRequestProperty("Expires-at", String.valueOf(expires));
  
@@ -77,7 +77,7 @@ public class SaltEdge {
 			e.printStackTrace();
 		}
 		//add request header
-		int expires = generateExpiresAt();
+		long expires = generateExpiresAt();
 		con.setRequestProperty("Signature", generateSignature("POST", expires, url, json));
 		con.setRequestProperty("Expires-at", String.valueOf(expires));
  
@@ -122,13 +122,13 @@ public class SaltEdge {
         return con;
     }
 	
-	private int generateExpiresAt() {
+	private long generateExpiresAt() {
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.MINUTE, REQUEST_EXPIRES_MINUTES);
-		return (int) (calendar.getTimeInMillis() / 1000L);
+		return calendar.getTimeInMillis();
     }
 	
-	private String generateSignature(String method, int expires, String url, String postBody) {
+	private String generateSignature(String method, long expires, String url, String postBody) {
         String signature    = String.format("%d|%s|%s|%s", expires, method, url, postBody);
         byte[] bytes        = signature.getBytes();
         byte[] shaSignature = null;
