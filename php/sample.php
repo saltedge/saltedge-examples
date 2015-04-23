@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * NOTE: This sample requires the following extensions installed and enabled:
+ * - php_curl
+ * - php_openssl
+ */
+
 require "SaltEdge.php";
 
 // Client access credentials
