@@ -1,0 +1,5 @@
+.idea/*
+private.pem
+public.pem
+*.pyc
+.DS_Store
