@@ -36,10 +36,10 @@ class SaltEdge:
         headers = {
             'Accept': 'application/json',
             'Content-type': 'application/json',
-            'Signature': '%s' % self.generate_signature("GET", expire, some_url),
-            'Expires-at': '%s' % expire,
-            'Client-id': '%s' % self.client_id,
-            'Service-secret': '%s' % self.service_secret
+            'Signature': self.generate_signature("GET", expire, some_url),
+            'Expires-at': expire,
+            'Client-id': self.client_id,
+            'Service-secret': self.service_secret
         }
         return requests.get(some_url, headers=headers)
 
@@ -48,9 +48,9 @@ class SaltEdge:
         headers = {
             'accept': 'application/json',
             'content-type': 'application/json',
-            'Signature': '%s' % self.generate_signature("POST", expire, some_url, payload),
-            'Expires-at': '%s' % expire,
-            'Client-id': '%s' % self.client_id,
-            'Service-secret': '%s' % self.service_secret
+            'Signature': self.generate_signature("POST", expire, some_url, payload),
+            'Expires-at': expire,
+            'Client-id': self.client_id,
+            'Service-secret': self.service_secret
         }
         return requests.post(some_url, data=payload, headers=headers)
