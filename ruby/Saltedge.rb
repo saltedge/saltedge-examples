@@ -1,24 +1,25 @@
-require "rest-client"
+require "json"
 require "base64"
 require "openssl"
+require "digest/sha1"
+require "rest-client"
 require "active_support"
 require "active_support/core_ext"
-require "digest/sha1"
-require "pry"
 
-class Saltedge
+class Saltedge  attr_reader :expires_at, :client_id, :service_secret, :url, :method, :params
 
-  def initialize(client_id, service_secret)
-    @client_id      = client_id
-    @service_secret = service_secret
+  def initialize(client_id, service_secret, private_pem_path)
+    @client_id        = client_id
+    @service_secret   = service_secret
+    @private_pem_path = private_pem_path
   end
 
-  def self.expires_at
-    (Time.now + 60.days).to_i
+  def expires_at
+    @expires_at ||= (Time.now + 1.minute).to_i
   end
 
-  def post(some_url)
-
+  def signature
+    Base64.encode64(rsa_key(@private_pem_path).sign(digest, "#{expires_at}|#{@method}|#{@url}|#{@params}"))
   end
 
   def rsa_key(file)
@@ -29,29 +30,23 @@ class Saltedge
     OpenSSL::Digest::SHA1.new
   end
 
-  def get(some_url)
-    expires = Saltedge.expires_at
-    signature = Base64.encode64(rsa_key("private.pem").sign(digest, "#{expires}|GET|#{some_url}"))
+  def request(method, url, params="")
+    @method = method
+    @params = params.to_json
+    @url    = url
 
-    pp response = RestClient::Request.execute(
-      :url            => some_url,
-      :method         => :get,
-      :headers        => {
-        # "Expires-at"     => expires,
-        # "Signature"      => signature,
+    RestClient::Request.execute(
+      method:  method,
+      url:     url,
+      payload: @params,
+      headers: {
         "Accept"         => "application/json",
         "Content-type"   => "application/json",
+        "Expires-at"     => expires_at,
+        "Signature"      => signature.delete("\n"),
         "Client-id"      => @client_id,
         "Service-secret" => @service_secret
-      },
-      :ssl_client_cert  =>  OpenSSL::X509::Certificate.new(File.read("saltedge.pem")),
-      # :ssl_ca_file      => File.expand_path("saltedge.pem"),
-      :ssl_version      => "SSLv3",
-      # :verify_ssl       => false
+      }
     )
   end
 end
-
-
-sdk = Saltedge.new("qYAUAjxz1zB0PqL5viGTwA", "hzzvj4DSgL_HGojGDtQAjp_PtWejH6RKWsjObweYd6o")
-sdk.get("https://www.saltedge.com/api/v2/countries")
