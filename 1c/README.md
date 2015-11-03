@@ -8,6 +8,9 @@ How to use module:
 - Press button **`Connect`**;
 - Choose your bank;
 - Get your __accounts__ and __transactions__.
+ 
+![accounts](https://cloud.githubusercontent.com/assets/11814972/10910048/ca466102-8245-11e5-9e64-1a18cd52a193.jpg)
+![transactions](https://cloud.githubusercontent.com/assets/11814972/10910049/ca4d0c8c-8245-11e5-84db-0f8238fc0bbd.jpg)
 
 Basic available functions:
 - `connect`
