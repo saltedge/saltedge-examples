@@ -6,6 +6,7 @@ require "rest-client"
 
 class Saltedge
   attr_reader :client_id, :service_secret, :private_pem_path
+  EXPIRATION_TIME = 60
 
   def initialize(client_id, service_secret, private_pem_path)
     @client_id        = client_id
@@ -17,19 +18,19 @@ class Saltedge
     hash = {
       method:     method,
       url:        url,
-      expires_at: (Time.now + 60).to_i,
-      params:     !params.empty? ? params.to_json : ""
+      expires_at: (Time.now + EXPIRATION_TIME).to_i,
+      params:     as_json(params)
     }
 
     RestClient::Request.execute(
-      method:  method,
-      url:     url,
+      method:  hash[:method],
+      url:     hash[:url],
       payload: hash[:params],
       headers: {
         "Accept"         => "application/json",
         "Content-type"   => "application/json",
         "Expires-at"     => hash[:expires_at],
-        "Signature"      => signature(hash).delete("\n"),
+        "Signature"      => signature(hash),
         "Client-id"      => client_id,
         "Service-secret" => service_secret
       }
@@ -39,7 +40,7 @@ class Saltedge
 private
 
   def signature(hash)
-    Base64.encode64(rsa_key.sign(digest, "#{hash[:expires_at]}|#{hash[:method]}|#{hash[:url]}|#{hash[:params]}"))
+    Base64.encode64(rsa_key.sign(digest, "#{hash[:expires_at]}|#{hash[:method]}|#{hash[:url]}|#{hash[:params]}")).delete("\n")
   end
 
   def rsa_key
@@ -48,5 +49,10 @@ private
 
   def digest
     OpenSSL::Digest::SHA1.new
+  end
+
+  def as_json(params)
+    return "" if params.empty?
+    params.to_json
   end
 end

@@ -51,7 +51,7 @@ describe "Saltedge" do
       }
       expect(OpenSSL::PKey::RSA).to receive(:new).with("private_pem_path").and_return(rsa_key)
       expect(rsa_key).to receive(:sign).with(saltedge.send(:digest), "1445529216|method|url|").and_return("some string")
-      expect(Base64).to receive(:encode64).with("some string")
+      expect(Base64).to receive(:encode64).with("some string").and_return(double(:delete => nil))
       saltedge.send(:signature, item)
     end
   end
