@@ -1,7 +1,7 @@
 require_relative "../saltedge"
 
 describe "Saltedge" do
-  let(:saltedge)  { Saltedge.new("CLIENT_ID", "SERVICE_SECRET", "private_pem_path") }
+  let(:saltedge)  { Saltedge.new("CLIENT_ID", "SERVICE_SECRET", "private.pem") }
   let(:digest)    { OpenSSL::Digest::SHA1.new }
   let(:rsa_key)   { double }
   let(:hash)      { {
@@ -43,13 +43,14 @@ describe "Saltedge" do
 
   describe "#signature" do
     it "should return encrypted signature" do
-      item    = {
+      file = File.open("private.pem")
+      item = {
         method:     "method",
         url:        "url",
         expires_at: 1445529216,
         params:     ""
       }
-      expect(OpenSSL::PKey::RSA).to receive(:new).with("private_pem_path").and_return(rsa_key)
+      expect(OpenSSL::PKey::RSA).to receive(:new).with(saltedge.private_pem_path).and_return(rsa_key)
       expect(rsa_key).to receive(:sign).with(saltedge.send(:digest), "1445529216|method|url|").and_return("some string")
       expect(Base64).to receive(:encode64).with("some string").and_return(double(:delete => nil))
       saltedge.send(:signature, item)
@@ -58,7 +59,7 @@ describe "Saltedge" do
 
   describe "#rsa_key" do
     it "should create an instance of RSA" do
-      expect(OpenSSL::PKey::RSA).to receive(:new).with("private_pem_path")
+      expect(OpenSSL::PKey::RSA).to receive(:new).with(saltedge.private_pem_path)
       saltedge.send(:rsa_key)
     end
   end

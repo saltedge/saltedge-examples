@@ -11,7 +11,7 @@ class Saltedge
   def initialize(client_id, service_secret, private_pem_path)
     @client_id        = client_id
     @service_secret   = service_secret
-    @private_pem_path = private_pem_path
+    @private_pem_path = File.open(private_pem_path)
   end
 
   def request(method, url, params={})
