@@ -1,4 +1,5 @@
 Example of integrating Salt Edge API with Ruby.
+Note, right after you clone this code, you should generate your private.pem and public.pem as described in [docs.saltedge.com](https://docs.saltedge.com/guides/signature/)
 
 ```
 api = Saltedge.new("CLIENT_ID", "SERVICE_SECRET", "private_pem_path")

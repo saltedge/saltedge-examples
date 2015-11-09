@@ -43,7 +43,6 @@ describe "Saltedge" do
 
   describe "#signature" do
     it "should return encrypted signature" do
-      file = File.open("private.pem")
       item = {
         method:     "method",
         url:        "url",
