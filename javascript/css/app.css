@@ -1,0 +1,156 @@
+.bs-sidebar.affix {
+  position: static;
+}
+
+.bs-sidenav {
+  text-shadow: 0 1px 0 #fff;
+  background-color: #f7f5fa;
+  border-radius: 5px;
+  padding: 10px 0;
+}
+
+.bs-sidenav li a {
+  font-size: 16px;
+}
+
+.bs-sidenav li ul li a {
+  font-size: 15px;
+  font-style: italic;
+}
+
+.bs-sidebar .nav > li > a {
+  display: block;
+  color: #428bca;
+  padding: 6px 15px;
+}
+
+.bs-sidebar .nav > li > a:hover,
+.bs-sidebar .nav > li > a:focus {
+  text-decoration: none;
+  background-color: #e5e3e9;
+  border-right: 1px solid #dbd8e0;
+}
+
+.bs-sidebar .nav > .active > a,
+.bs-sidebar .nav > .active:hover > a,
+.bs-sidebar .nav > .active:focus > a {
+  font-weight: bold;
+  color: #0033FF;
+  background-color: transparent;
+  border-right: 1px solid #0033FF;
+}
+
+/* Nav: second level (shown on .active) */
+.bs-sidebar .nav .nav {
+  display: none;
+  /* Hide by default, but at >768px, show it */
+  margin-bottom: 8px;
+}
+
+.bs-sidebar .nav .nav > li > a {
+  padding-top: 3px;
+  padding-bottom: 3px;
+  padding-left: 30px;
+  font-size: 90%;
+}
+
+.bs-sidebar .nav > .active > ul {
+  display: block;
+}
+
+#connect-iframe {
+  width: 100%;
+  height: 600px;
+}
+
+table tr {
+  height: 45px;
+  line-height: 45px;
+}
+
+table tr td {
+  vertical-align: middle !important;
+}
+
+table.table-dashboard td.bold {
+  font-weight: 900;
+}
+
+table.table-dashboard td.data-head {
+  width: 33%;
+}
+
+table.table-dashboard td .connect {
+  margin: 0;
+}
+
+table.table-dashboard.head {
+  text-transform: none;
+}
+
+table.table-dashboard.head tr {
+  height: 50px;
+  line-height: 50px;
+}
+
+table.table-dashboard.head td {
+  width: 25%;
+}
+
+table.table-dashboard.additional {
+  margin-top: 60px;
+}
+
+table tr.pending td {
+  color: #b2b2b2;
+}
+
+table tr th, table tr td {
+  font-size: 15px;
+}
+
+table tr th.actions, table tr td.actions {
+  width: 10%;
+}
+
+.alert-block {
+  margin: 10px 0 0 0;
+}
+
+.alert-block h4 {
+  margin: 2px 0;
+  text-align: center;
+}
+
+.alert-block button.close {
+  margin-top: -2px;
+}
+
+.connect {
+  margin: 0 0 10px 20px;
+}
+
+.open {
+  position: relative;
+}
+
+.open .dropdown-menu {
+  right: 0;
+}
+
+.open .dropdown-menu a.disabled {
+  color: #b2b2b2;
+  cursor: default;
+}
+
+td.data-head, th {
+  color: #afafaf;
+  text-transform: uppercase;
+  padding-left: 30px;
+  line-height: 23px;
+  font-weight: 400;
+}
+
+td.data-head {
+  width: 250px;
+}
