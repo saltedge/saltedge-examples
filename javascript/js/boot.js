@@ -9,14 +9,14 @@ window.HermesApp = new Marionette.Application({
   init: function(options) {
     HermesApp.Config = {
       applicationTitle: "Hermes",
-      applicationUrl:   "http://localhost:5555",
+      applicationUrl:   location.origin,
       perPage:          20,
       dateTimeFormat:   "YYYY-MM-DD HH:mm:ss"
     };
 
     HermesApp.Data = {
-      saltedgeBaseUrl:   "https://banksalt.com",
-      saltedgeClientUrl: "https://banksalt.com/clients/profile/secrets",
+      saltedgeBaseUrl:   "https://www.saltedge.com",
+      saltedgeClientUrl: "https://www.saltedge.com/clients/profile/secrets",
       clientId:          "",
       appSecret:         "",
       customers:         new HermesApp.Collections.Customers(),

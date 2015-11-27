@@ -9,14 +9,16 @@ HermesApp.Routers.Main = Backbone.Router.extend({
   },
 
   getAllData: function() {
-    HermesApp.Data.logins = this.customer.getEntities(HermesApp.Models.Customer.LOGINS);
-    HermesApp.Data.accounts = this.customer.getEntities(HermesApp.Models.Customer.ACCOUNTS);
+    HermesApp.Data.logins              = this.customer.getEntities(HermesApp.Models.Customer.LOGINS);
+    HermesApp.Data.accounts            = this.customer.getEntities(HermesApp.Models.Customer.ACCOUNTS);
     return HermesApp.Data.transactions = this.customer.getEntities(HermesApp.Models.Customer.TRANSACTIONS);
   },
 
   getCollection: function(entities) {
-    var originalLength, entitiesLength;
-    originalLength = this.customer.get(entities).length;
+    var originalLength, entitiesLength, _entities;
+
+    _entities      = this.customer.get(entities);
+    originalLength = _entities ? _entities.length : 0;
     entitiesLength = HermesApp.Data[entities].length;
 
     if (entitiesLength === 0 || entitiesLength < originalLength) {
