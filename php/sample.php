@@ -13,8 +13,9 @@ define('CLIENT_ID', "YOUR_CLIENT_ID");
 define("SERVICE_SECRET", "YOUR_SERVICE_SECRET");
 
 // Private key details
-$privateKeyPath = 'file://./private.pem';   // Path to private key file (relative or absolute)
-$privateKeyPass = null;                     // Optional, if the private key is password protected
+$scriptPath     = dirname(__FILE__);
+$privateKeyPath = "file://{$scriptPath}/private.pem"; // Path to private key file
+$privateKeyPass = null;                               // Optional, if the private key is password protected
 
 // Initialize
 try {
