@@ -1,6 +1,12 @@
 <?php
 
 /**
+* DISCLAIMER:
+* THIS FILE SHOULD SERVE AS A REFERENCE IMPLEMENTATION OF "SaltEdge" CLASS USAGE.
+* IT IS NOT PRODUCTION READY, NOR INTENDED TO BE USED FOR REAL WORLD REQUESTS.
+*/
+
+/**
  * NOTE: This sample requires the following extensions installed and enabled:
  * - php_curl
  * - php_openssl
