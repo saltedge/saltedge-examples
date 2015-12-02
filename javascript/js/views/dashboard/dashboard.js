@@ -43,7 +43,7 @@ HermesApp.Views.Dashboard = HermesApp.ItemView.extend({
     if (!(localStorage.getItem("client_id") || localStorage.getItem("app_secret"))) {
       var that = this;
       new HermesApp.Views.MainInfo({
-        action: function() { that.requestForCustomerId; }
+        action: function() { that.requestForCustomerId(); }
       });
       return;
     }
