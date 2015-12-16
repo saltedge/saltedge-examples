@@ -50,24 +50,21 @@ HermesApp.Models.Login = HermesApp.Model.extend({
 
   fetchTransactions: function() {
     var transactions;
-    transactions = this.customer.get("transactions");
-    if (!transactions) { transactions = []; };
+    transactions = this.customer.get("transactions") || [];
 
     this.fetchData(HermesApp.Models.Customer.TRANSACTIONS).success((function(_this) {
       return function(data) {
         HermesApp.Data.transactions.add(data.data);
-        transactions = transactions.concat(data.data)
-      };
-    })(this));
+        transactions = transactions.concat(data.data);
 
-    return this.fetchData(HermesApp.Models.Customer.TRANSACTIONS, HermesApp.Models.Transaction.PENDING).success((function(_this) {
-      return function(data) {
-        HermesApp.Data.transactions.add(data.data);
-        transactions = transactions.concat(data.data)
-        _this.customer.set({transactions: transactions});
-        _this.customer.save();
+        return _this.fetchData(HermesApp.Models.Customer.TRANSACTIONS, HermesApp.Models.Transaction.PENDING).success(function(data) {
+          HermesApp.Data.transactions.add(data.data);
+          transactions = transactions.concat(data.data);
 
-        return _this.customer.trigger("fetch:completed", _this.get("provider_name"));
+          _this.customer.set({transactions: transactions});
+          _this.customer.save();
+          return _this.customer.trigger("fetch:completed", _this.get("provider_name"));
+        });
       };
     })(this));
   },
