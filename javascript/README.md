@@ -1,10 +1,10 @@
 ### Example of integrating Salt Edge API with JavaScript.
 
-* After clone this code, in folder with files run any file server (like python -m SimpleHTTPServer) or another.
+* To run this code, you need a simple http server that will serve all the content. You can use **python -m SimpleHTTPServer**.
 
-* In your [Saltedge Profile Settings](https://www.saltedge.com/clients/profile/edit) set this address to home url and save.
+* Go to your [Salt Edge profile settings](https://www.saltedge.com/clients/profile/edit), and set in field **home url** the url of the app to your external ip, so that CORS requests will be allowed by the Salt Edge API
 
-* Then open in browser page with ip address (like http://192.168.88.88 if use local server)
+* Open the address provided by the http server.
 
 * Go to [Profile Data Secrets](https://www.saltedge.com/clients/profile/secrets) and Copy Paste data to JavaScript Application Page.
 
