@@ -7,6 +7,7 @@ HermesApp.Models.Customer = HermesApp.Model.extend({
   getCustomerId: function() {
     var identifier, params;
     identifier = HermesApp.randomStringGenerator(21);
+
     this.set({
       identifier: identifier
     });
@@ -17,18 +18,12 @@ HermesApp.Models.Customer = HermesApp.Model.extend({
       }
     };
 
-    return $.ajax({
-      beforeSend: (function(_this) {
-        return function(xhrObj) {
-          xhrObj.setRequestHeader("Accept", "application/json");
-          xhrObj.setRequestHeader("Content-Type", "application/json");
-          xhrObj.setRequestHeader("Client-id", localStorage.getItem("client_id"));
-          return xhrObj.setRequestHeader("App-secret", localStorage.getItem("app_secret"));
-        };
-      })(this),
-      url: HermesApp.Data.saltedgeBaseUrl + "/api/v2/customers",
+    return Backbone.$.ajax({
+      headers: {
+        "App-secret": localStorage.getItem("app_secret")
+      },
+      url:  HermesApp.Data.saltedgeBaseUrl + "/api/v2/customers",
       type: "POST",
-      dataType: "json",
       data: JSON.stringify(params)
     });
   },
@@ -37,6 +32,7 @@ HermesApp.Models.Customer = HermesApp.Model.extend({
     var customerId, params, returnTo;
     customerId = this.get("customer_id");
     returnTo = "/dashboard";
+
     this.set({
       return_to: returnTo
     });
@@ -54,18 +50,12 @@ HermesApp.Models.Customer = HermesApp.Model.extend({
       }
     };
 
-    return $.ajax({
-      beforeSend: (function(_this) {
-        return function(xhrObj) {
-          xhrObj.setRequestHeader("Accept", "application/json");
-          xhrObj.setRequestHeader("Content-Type", "application/json");
-          xhrObj.setRequestHeader("Client-id", localStorage.getItem("client_id"));
-          return xhrObj.setRequestHeader("App-secret", localStorage.getItem("app_secret"));
-        };
-      })(this),
-      url: HermesApp.Data.saltedgeBaseUrl + "/api/v2/tokens/create",
+    return Backbone.$.ajax({
+      headers: {
+        "App-secret": localStorage.getItem("app_secret")
+      },
+      url:  HermesApp.Data.saltedgeBaseUrl + "/api/v2/tokens/create",
       type: "POST",
-      dataType: "json",
       data: JSON.stringify(params)
     });
   },
@@ -78,16 +68,11 @@ HermesApp.Models.Customer = HermesApp.Model.extend({
       }
     };
 
-    return $.ajax({
-      beforeSend: (function(_this) {
-        return function(xhrObj) {
-          xhrObj.setRequestHeader("Accept", "application/json");
-          xhrObj.setRequestHeader("Content-Type", "application/json");
-          xhrObj.setRequestHeader("Client-id", localStorage.getItem("client_id"));
-          return xhrObj.setRequestHeader("Service-secret", localStorage.getItem("service_secret"));
-        };
-      })(this),
-      url: HermesApp.Data.saltedgeBaseUrl + "/api/v2/customers",
+    return Backbone.$.ajax({
+      headers: {
+        "Service-secret": localStorage.getItem("service_secret")
+      },
+      url:  HermesApp.Data.saltedgeBaseUrl + "/api/v2/customers",
       type: "DELETE",
       data: JSON.stringify(params)
     });
