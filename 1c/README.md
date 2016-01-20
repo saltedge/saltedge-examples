@@ -1,5 +1,5 @@
-###Salt Edge Api in 1C-Битрикс.
-**Compatible with 1С:Предприятие (8.3.6).**
+###Salt Edge Api in 1C-Bitrix.
+**Compatible with 1С:Enterprise (8.3.6).**
 
 How to use module:
 - Open module in **1C** `File -> Open -> path to the file`;
