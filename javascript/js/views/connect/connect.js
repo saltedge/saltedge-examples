@@ -35,7 +35,7 @@ HermesApp.Views.Connect = HermesApp.ItemView.extend({
       }
       data = JSON.parse(event.originalEvent.data).data;
 
-      if (data.state === "error") {
+      if (data.stage === "error") {
         message = "Error! Duplicated login";
         view = new HermesApp.Views.Message({
           success: false,
@@ -45,10 +45,10 @@ HermesApp.Views.Connect = HermesApp.ItemView.extend({
       }
 
       this.login.set({
-        customer_id:         HermesApp.Data.customer.get("customer_id"),
+        customer_secret:     HermesApp.Data.customer.get("secret"),
         id:                  data.login_id,
         secret:              data.secret,
-        state:               data.state,
+        stage:               data.stage,
         customer_identifier: HermesApp.Data.customer.get("identifier")
       });
 

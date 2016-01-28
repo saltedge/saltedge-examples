@@ -32,7 +32,7 @@ HermesApp.Views.Login = HermesApp.ItemView.extend({
   },
 
   getLoginState: function() {
-    if (this.model.get("state") === "success") {
+    if (this.model.get("stage") === "success") {
       return "success";
     }
     return "danger";

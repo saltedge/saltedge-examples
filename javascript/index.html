@@ -275,9 +275,9 @@
           </td>
         </tr>
         <tr>
-          <td class="data-head">Customer id</td>
+          <td class="data-head">Secret</td>
           <td>
-            <%= customer_id %>
+            <%= secret %>
           </td>
         </tr>
         <tr>
@@ -483,12 +483,6 @@
           </td>
         </tr>
         <tr>
-          <td class="data-head">Customer Identifier</td>
-          <td>
-            <%= customer_identifier %>
-          </td>
-        </tr>
-        <tr>
           <td class="data-head">Provider</td>
           <td>
             <%= provider_name %>
@@ -503,19 +497,19 @@
         <tr>
           <td class="data-head">Interactive</td>
           <td>
-            <%= interactive %>
+            <%= last_attempt.interactive %>
           </td>
         </tr>
         <tr>
           <td class="data-head">Automatic fetch</td>
           <td>
-            <%= automatic_fetch %>
+            <%= last_attempt.automatic_fetch %>
           </td>
         </tr>
         <tr>
-          <td class="data-head">Customer id</td>
+          <td class="data-head">Customer secret</td>
           <td>
-            <%= customer_id %>
+            <%= customer_secret %>
           </td>
         </tr>
         <tr>
@@ -531,12 +525,6 @@
           </td>
         </tr>
         <tr>
-          <td class="data-head">Store credentials</td>
-          <td>
-            <%= store_credentials %>
-          </td>
-        </tr>
-        <tr>
           <td class="data-head">Last fail</td>
           <td>
             <%= last_fail_at %>
@@ -546,12 +534,6 @@
           <td class="data-head">Last fail message</td>
           <td>
             <%= last_fail_message %>
-          </td>
-        </tr>
-        <tr>
-          <td class="data-head">Last request</td>
-          <td>
-            <%= last_request_at %>
           </td>
         </tr>
         <tr>
