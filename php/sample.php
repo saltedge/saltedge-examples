@@ -28,7 +28,7 @@ try {
     $seClient = new SaltEdge(CLIENT_ID, SERVICE_SECRET, $privateKeyPath, $privateKeyPass);
 
     // This is how a GET request is made
-    echo $seClient->get("https://www.saltedge.com/api/v2/countries");
+    echo $seClient->get("https://www.saltedge.com/api/v3/countries");
 
     // This is how a POST request is made
     /*
@@ -38,7 +38,7 @@ try {
         ),
     );
 
-    echo $seClient->post("https://www.saltedge.com/api/v2/customers", $payload);
+    echo $seClient->post("https://www.saltedge.com/api/v3/customers", $payload);
     */
 
     $seClient->shutdown();
