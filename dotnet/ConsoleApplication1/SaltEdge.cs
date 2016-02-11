@@ -1,17 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Net;
-using System.Security.Cryptography;
-using Org.BouncyCastle.Crypto;
 using System.IO;
-using Org.BouncyCastle.Crypto.Encodings;
-using Org.BouncyCastle.Crypto.Parameters;
-using Org.BouncyCastle.Crypto.Engines;
+using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.OpenSsl;
-using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Security;
 using Newtonsoft.Json;
 
@@ -37,7 +28,7 @@ namespace SESample
             request.Headers["Signature"]    = generateSignature("GET", expires, url, "");
             request.Headers["Expires-at"]   = expires.ToString();
 
-            return processResponse(request);
+            return execute(request);
         }
 
         public static string post(String url, object payload)
@@ -54,7 +45,7 @@ namespace SESample
                 request.Headers["Signature"] = generateSignature("POST", expires, url, json);
             }
 
-            return processResponse(request);
+            return execute(request);
         }
 
         private static WebRequest buildRequest(string method, string url)
@@ -75,7 +66,7 @@ namespace SESample
             return (Int32)DateTime.UtcNow.AddMinutes(REQUEST_EXPIRES_MINUTES).Subtract(unixBegin).TotalSeconds;
         }
 
-        private static string processResponse(WebRequest request)
+        private static string execute(WebRequest request)
         {
             WebResponse response;
 
@@ -89,6 +80,10 @@ namespace SESample
                 response = e.Response;
             }
 
+            return process(response);
+        }
+
+        private static string process(WebResponse response) {
             using (System.IO.Stream s = response.GetResponseStream())
             {
                 using (System.IO.StreamReader sr = new System.IO.StreamReader(s))
