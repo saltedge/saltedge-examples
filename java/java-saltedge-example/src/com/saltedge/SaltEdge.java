@@ -1,6 +1,5 @@
 package com.saltedge;
 
-
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -8,14 +7,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.util.Calendar;
@@ -60,11 +57,20 @@ public class SaltEdge {
 	public String post(String url, Object payload) {
  
 		HttpURLConnection con = buildRequest("POST", url);
+
 		if (con == null) {
 			return "";
-		} 
+		}
+		
+		//add request header
+		long expires = generateExpiresAt();
+		con.setRequestProperty("Expires-at", String.valueOf(expires));
+
+		//generate json
 		Gson gson = new Gson();
 		String json = gson.toJson(payload);
+
+		con.setRequestProperty("Signature", generateSignature("POST", expires, url, json));
 		con.setDoOutput(true);
 		DataOutputStream wr;
 		try {
@@ -76,11 +82,6 @@ public class SaltEdge {
 			System.out.println("IOException : " + e);
 			e.printStackTrace();
 		}
-		//add request header
-		long expires = generateExpiresAt();
-		con.setRequestProperty("Signature", generateSignature("POST", expires, url, json));
-		con.setRequestProperty("Expires-at", String.valueOf(expires));
- 
 		return processResponse(con);
 	}
 	
@@ -105,6 +106,7 @@ public class SaltEdge {
 	private HttpURLConnection buildRequest(String method, String url)
     {
 		HttpURLConnection con = null;
+
 		try {
 			URL obj = new URL(url);
 			con = (HttpURLConnection) obj.openConnection();
@@ -185,6 +187,6 @@ public class SaltEdge {
 			return null;
 		}
         return obj;
-
 	}
+
 }
