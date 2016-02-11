@@ -94,7 +94,7 @@ HermesApp.Models.Login = HermesApp.Model.extend({
 
     return Backbone.$.ajax({
       headers: this.setHeaders(),
-      url:     HermesApp.Data.saltedgeBaseUrl + "/api/v2/" + kind + "/" + type,
+      url:     HermesApp.Data.saltedgeBaseUrl + "/api/v3/" + kind + "/" + type,
       type:    "GET",
       data:    JSON.stringify(params)
     });
@@ -103,7 +103,7 @@ HermesApp.Models.Login = HermesApp.Model.extend({
   removeLogin: function() {
     return Backbone.$.ajax({
       headers: this.setHeaders(),
-      url:     HermesApp.Data.saltedgeBaseUrl + "/api/v2/login",
+      url:     HermesApp.Data.saltedgeBaseUrl + "/api/v3/login",
       type:    "DELETE"
     });
   },
@@ -124,7 +124,7 @@ HermesApp.Models.Login = HermesApp.Model.extend({
 
     return Backbone.$.ajax({
       headers: this.setHeaders(),
-      url:     HermesApp.Data.saltedgeBaseUrl + "/api/v2/tokens/refresh",
+      url:     HermesApp.Data.saltedgeBaseUrl + "/api/v3/tokens/refresh",
       type:    "POST",
       data:    JSON.stringify(params)
     });
@@ -146,7 +146,7 @@ HermesApp.Models.Login = HermesApp.Model.extend({
 
     return Backbone.$.ajax({
       headers: this.setHeaders(),
-      url:     HermesApp.Data.saltedgeBaseUrl + "/api/v2/tokens/reconnect",
+      url:     HermesApp.Data.saltedgeBaseUrl + "/api/v3/tokens/reconnect",
       type:    "POST",
       data:    JSON.stringify(params)
     });

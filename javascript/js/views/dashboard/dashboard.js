@@ -16,7 +16,7 @@ HermesApp.Views.Dashboard = HermesApp.ItemView.extend({
   initialize: function(options) {
     this.model = HermesApp.Data.customer;
 
-    if (!this.model.get("customer_id")) {
+    if (!this.model.get("secret")) {
       this.getCustomerId();
     }
     this.listenTo(this.model, "fetch:completed", this.afterFetch);
@@ -54,7 +54,7 @@ HermesApp.Views.Dashboard = HermesApp.ItemView.extend({
     return this.model.getCustomerId().success((function(_this) {
       return function(data) {
         _this.model.set({
-          customer_id: data.data.customer_id,
+          secret: data.data.secret,
           status: "active"
         });
         return _this.model.save();
@@ -66,7 +66,7 @@ HermesApp.Views.Dashboard = HermesApp.ItemView.extend({
 
   createConnect: function(event) {
     event.preventDefault();
-    if (!this.model.get("customer_id")) {
+    if (!this.model.get("secret")) {
       return this.getCustomerId();
     }
     return this.model.createToken().success((function(_this) {
@@ -101,7 +101,7 @@ HermesApp.Views.Dashboard = HermesApp.ItemView.extend({
   },
 
   resetAllData: function() {
-    if (!this.model.get("customer_id")) {
+    if (!this.model.get("secret")) {
       return this.getCustomerId();
     }
     return this.model.removeCustomer().success((function(_this) {

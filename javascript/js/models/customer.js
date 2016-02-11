@@ -22,7 +22,7 @@ HermesApp.Models.Customer = HermesApp.Model.extend({
       headers: {
         "App-secret": localStorage.getItem("app_secret")
       },
-      url:  HermesApp.Data.saltedgeBaseUrl + "/api/v2/customers",
+      url:  HermesApp.Data.saltedgeBaseUrl + "/api/v3/customers",
       type: "POST",
       data: JSON.stringify(params)
     });
@@ -30,7 +30,7 @@ HermesApp.Models.Customer = HermesApp.Model.extend({
 
   createToken: function() {
     var customerId, params, returnTo;
-    customerId = this.get("customer_id");
+    customerId = this.get("secret");
     returnTo = "/dashboard";
 
     this.set({
@@ -43,7 +43,7 @@ HermesApp.Models.Customer = HermesApp.Model.extend({
 
     params = {
       data: {
-        customer_id: customerId,
+        secret: customerId,
         fetch_type: "recent",
         return_to: "" + HermesApp.Config.applicationUrl + returnTo,
         javascript_callback_type: "post_message"
@@ -54,7 +54,7 @@ HermesApp.Models.Customer = HermesApp.Model.extend({
       headers: {
         "App-secret": localStorage.getItem("app_secret")
       },
-      url:  HermesApp.Data.saltedgeBaseUrl + "/api/v2/tokens/create",
+      url:  HermesApp.Data.saltedgeBaseUrl + "/api/v3/tokens/create",
       type: "POST",
       data: JSON.stringify(params)
     });
@@ -64,7 +64,7 @@ HermesApp.Models.Customer = HermesApp.Model.extend({
     var params;
     params = {
       data: {
-        customer_id: this.get("customer_id")
+        secret: this.get("secret")
       }
     };
 
@@ -72,7 +72,7 @@ HermesApp.Models.Customer = HermesApp.Model.extend({
       headers: {
         "Service-secret": localStorage.getItem("service_secret")
       },
-      url:  HermesApp.Data.saltedgeBaseUrl + "/api/v2/customers",
+      url:  HermesApp.Data.saltedgeBaseUrl + "/api/v3/customers",
       type: "DELETE",
       data: JSON.stringify(params)
     });
