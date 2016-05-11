@@ -169,6 +169,9 @@ class SaltEdge
         if ($method === 'POST') {
             $curlOptions[CURLOPT_POST] = true;
             $curlOptions[CURLOPT_POSTFIELDS] = $payload;
+        } elseif ($method == 'PUT' || $method == 'DELETE') {
+            $curlOptions[CURLOPT_CUSTOMREQUEST] = $method;
+            $curlOptions[CURLOPT_POSTFIELDS] = $payload;
         } else {
             $curlOptions[CURLOPT_HTTPGET] = true;
         }
@@ -218,5 +221,39 @@ class SaltEdge
     public function post($url, $payload, $expire = null)
     {
         return $this->request('POST', $url, $payload, $expire);
+    }
+
+    /**
+     * Shortcut method that makes a PUT request
+     *
+     * @param string   $url
+     * @param mixed    $payload
+     * @param null|int $expire
+     *
+     * @throws LogicException   If the object has been shut down
+     * @throws Exception        If it fails to compute the signature of the request
+     * @throws RuntimeException If cURL fails to fulfill the request
+     * @return mixed
+     */
+    public function put($url, $payload, $expire = null)
+    {
+        return $this->request('PUT', $url, $payload, $expire);
+    }
+
+    /**
+     * Shortcut method that makes a PUT request
+     *
+     * @param string     $url
+     * @param null|mixed $payload
+     * @param null|int   $expire
+     *
+     * @throws LogicException   If the object has been shut down
+     * @throws Exception        If it fails to compute the signature of the request
+     * @throws RuntimeException If cURL fails to fulfill the request
+     * @return mixed
+     */
+    public function delete($url, $payload = null, $expire = null)
+    {
+        return $this->request('DELETE', $url, $payload, $expire);
     }
 }
