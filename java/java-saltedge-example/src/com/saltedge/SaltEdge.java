@@ -49,6 +49,8 @@ public class SaltEdge {
 		long expires = generateExpiresAt();
 		con.setRequestProperty("Signature", generateSignature("GET", expires, url, ""));
 		con.setRequestProperty("Expires-at", String.valueOf(expires));
+		con.setRequestProperty("Content-Type", "application/json");
+		con.setRequestProperty("Accept", "application/json");
  
 		return processResponse(con);
 	}
@@ -71,6 +73,8 @@ public class SaltEdge {
 		String json = gson.toJson(payload);
 
 		con.setRequestProperty("Signature", generateSignature("POST", expires, url, json));
+		con.setRequestProperty("Content-Type", "application/json");
+		con.setRequestProperty("Accept", "application/json");
 		con.setDoOutput(true);
 		DataOutputStream wr;
 		try {
@@ -127,7 +131,7 @@ public class SaltEdge {
 	private long generateExpiresAt() {
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.MINUTE, REQUEST_EXPIRES_MINUTES);
-		return calendar.getTimeInMillis();
+		return calendar.getTimeInMillis() / 1000;
     }
 	
 	private String generateSignature(String method, long expires, String url, String postBody) {
