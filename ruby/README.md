@@ -8,3 +8,11 @@ api.request("POST", "https://www.saltedge.com/api/v3/customers/", {"data" => {"i
 ```
 If you get Exception: SSL_connect returned=1 errno=0 state=SSLv3 read server hello A: sslv3 alert handshake failure (OpenSSL::SSL::SSLError), try updating to rest-client 1.8.3
 And here is a link to our [documentation](https://docs.saltedge.com/), where you can find step-by-step instructions.
+
+# NOTE
+If client of spectre generates signatures in rails and error "Signature does not match" occurs.
+The reason is Rails ActiveSupport `.to_json` method, solution:
+ - Ruby STD `JSON.generate` 
+ - ActiveSupport `.to_json_without_active_support_encoder`
+
+This may occur when there is a special char in json `&`.
