@@ -10,9 +10,8 @@ If you get Exception: SSL_connect returned=1 errno=0 state=SSLv3 read server hel
 And here is a link to our [documentation](https://docs.saltedge.com/), where you can find step-by-step instructions.
 
 # NOTE
-If client of spectre generates signatures in rails and error "Signature does not match" occurs.
-The reason is Rails ActiveSupport `.to_json` method, solution:
- - Ruby STD `JSON.generate` 
- - ActiveSupport `.to_json_without_active_support_encoder`
+Please note that Rails’ default json encoder (`anything#to_json`) escapes some chars when generating json.
 
-This may occur when there is a special char in json `&`.
+This is important because it might generate an invalid request signature in cases when data contains the ‘&’ character. 
+
+Use `JSON.generate` or `.to_json_without_active_support_encoder` when generating request signature.
