@@ -8,3 +8,10 @@ api.request("POST", "https://www.saltedge.com/api/v3/customers/", {"data" => {"i
 ```
 If you get Exception: SSL_connect returned=1 errno=0 state=SSLv3 read server hello A: sslv3 alert handshake failure (OpenSSL::SSL::SSLError), try updating to rest-client 1.8.3
 And here is a link to our [documentation](https://docs.saltedge.com/), where you can find step-by-step instructions.
+
+# NOTE
+Please note that Rails’ default json encoder (`anything#to_json`) escapes some chars when generating json.
+
+This is important because it might generate an invalid request signature in cases when data contains the ‘&’ character. 
+
+Use `JSON.generate` or `.to_json_without_active_support_encoder` when generating request signature.
