@@ -1,0 +1,15 @@
+{
+  "name": "node",
+  "version": "1.0.0",
+  "description": "Salt Edge API",
+  "main": "saltedge.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ivan Danci",
+  "license": "ISC",
+  "dependencies": {
+    "node-rest-client": "^3.1.0",
+    "node-rsa": "^0.4.2"
+  }
+}
