@@ -1,3 +1,5 @@
+require_relative "signature"
+
 require "json"
 require "base64"
 require "openssl"
@@ -30,18 +32,22 @@ class Saltedge
         "Accept"         => "application/json",
         "Content-type"   => "application/json",
         "Expires-at"     => hash[:expires_at],
-        "Signature"      => signature(hash),
+        "Signature"      => sign_request(hash),
         "Client-id"      => client_id,
         "Service-secret" => service_secret
       }
     )
   end
 
-private
-
-  def signature(hash)
-    Base64.encode64(rsa_key.sign(digest, "#{hash[:expires_at]}|#{hash[:method]}|#{hash[:url]}|#{hash[:params]}")).delete("\n")
+  def verify_signature(public_key, data, signature)
+    Signature.verify(public_key, data, signature)
   end
+
+  def sign_request(hash)
+    Signature.sign(rsa_key, "#{hash[:expires_at]}|#{hash[:method]}|#{hash[:url]}|#{hash[:params]}")
+  end
+
+private
 
   def rsa_key
     @rsa_key ||= OpenSSL::PKey::RSA.new(@private_pem_path)
