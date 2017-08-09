@@ -7,6 +7,10 @@ import time
 class PEMKeyLoader:
     @staticmethod
     def load_public_key(path_to_file):
+        """
+        :param path_to_file: string
+        :return: OpenSSL.crypto.PKey, The private key to verify with. 
+        """
         with open(path_to_file, "rb") as public_key:
             keydata = public_key.read()
         public_key = crypto.load_publickey(crypto.FILETYPE_PEM, keydata)
@@ -14,6 +18,10 @@ class PEMKeyLoader:
 
     @staticmethod
     def load_private_key(path_to_file):
+        """
+        :param path_to_file: string
+        :return: OpenSSL.crypto.PKey, The private key to verify with. 
+        """
         with open(path_to_file, "rb") as private_key:
             keydata = private_key.read()
         private_key = crypto.load_privatekey(crypto.FILETYPE_PEM, keydata)
@@ -30,13 +38,32 @@ class SaltEdge:
         self._private_key = PEMKeyLoader.load_private_key(private_path)
 
     def sign(self, message):
+        """
+        Signs a message.
+        :param message: string, Message to be signed.
+        :return: string, The signature of the message for the given key.
+          """
         return base64.b64encode(crypto.sign(self._private_key, message, self.digest))
 
     def generate_signature(self, method, expire, some_url, payload=""):
+        """
+        Generates base64 encoded SHA1 signature of the string given params, signed with the client's private key.
+        :param method:  uppercase method of the HTTP request. Example: GET, POST, PATCH, PUT, DELETE, etc.;
+        :param expire:  the full requested URL, with all its complementary parameters;
+        :param some_url: the request post body. Should be left empty if it is a GET request, or the body is empty;
+        :param payload: the uploaded file digested through MD5 algorithm. Should be left empty if it is a GET request, or no file uploaded.
+        :return: base64 encoded SHA1 signature
+        """
         message = "{expire}|{method}|{some_url}|{payload}".format(**locals())
         return self.sign(message)
 
     def verify(self, message, signature):
+        """
+        Verifies the signature on a message.
+        :param message: string, The message to verify.
+        :param signature: string, The signature on the message.
+        :return: 
+        """
         return crypto.verify(self._public_key, base64.b64decode(signature), message, self.digest)
 
     @staticmethod
