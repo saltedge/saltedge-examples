@@ -9,7 +9,7 @@ class PEMKeyLoader:
     def load_public_key(path_to_file):
         """
         :param path_to_file: string
-        :return: OpenSSL.crypto.PKey, The private key to verify with. 
+        :return: OpenSSL.crypto.PKey, The private key to verify with.
         """
         with open(path_to_file, "rb") as public_key:
             keydata = public_key.read()
@@ -20,7 +20,7 @@ class PEMKeyLoader:
     def load_private_key(path_to_file):
         """
         :param path_to_file: string
-        :return: OpenSSL.crypto.PKey, The private key to verify with. 
+        :return: OpenSSL.crypto.PKey, The private key to verify with.
         """
         with open(path_to_file, "rb") as private_key:
             keydata = private_key.read()
@@ -62,7 +62,7 @@ class SaltEdge:
         Verifies the signature on a message.
         :param message: string, The message to verify.
         :param signature: string, The signature on the message.
-        :return: 
+        :return:
         """
         return crypto.verify(self._public_key, base64.b64decode(signature), message, self.digest)
 
@@ -93,3 +93,15 @@ class SaltEdge:
             'Service-secret': self.service_secret
         }
         return requests.post(some_url, data=payload, headers=headers)
+
+    def put(self, some_url, payload):
+        expire = self.expires_at()
+        headers = {
+            'accept': 'application/json',
+            'content-type': 'application/json',
+            'Signature': self.generate_signature("POST", expire, some_url, payload),
+            'Expires-at': expire,
+            'Client-id': self.client_id,
+            'Service-secret': self.service_secret
+        }
+        return requests.put(some_url, data=payload, headers=headers)
