@@ -16,7 +16,7 @@ function signedHeaders(url, method, params) {
     "Accept":         "application/json",
     "Content-Type":   "application/json",
     "App-id":         credentials.app_id,
-    "Secret":         credentials.service_secret,
+    "Secret":         credentials.secret,
     "Expires-at":     expires_at,
     "Signature":      key.sign(payload, "base64")
   }
