@@ -1,11 +1,9 @@
-CLIENT_ID      = "client_id_from_spectre_profile"
-SERVICE_SECRET = "service_secret_from_spectre_profile"
+Client      = require("node-rest-client").Client;
+NodeRSA     = require("node-rsa");
+fs          = require("fs");
+credentials = require("./credentials.json")
 
-Client  = require("node-rest-client").Client;
-NodeRSA = require("node-rsa");
-fs      = require("fs");
-
-key     = new NodeRSA(fs.readFileSync("private.pem"), { signingScheme: "sha1" });
+key     = new NodeRSA(fs.readFileSync("private.pem"), 'private');
 client  = new Client();
 
 function signedHeaders(url, method, params) {
@@ -17,20 +15,20 @@ function signedHeaders(url, method, params) {
   return {
     "Accept":         "application/json",
     "Content-Type":   "application/json",
-    "Client-id":      CLIENT_ID,
-    "Service-secret": SERVICE_SECRET,
+    "App-id":         credentials.app_id,
+    "Secret":         credentials.service_secret,
     "Expires-at":     expires_at,
     "Signature":      key.sign(payload, "base64")
   }
 }
 
-url = "https://www.saltedge.com/api/v3/countries"
+url = "https://www.saltedge.com/api/v4/countries"
 client.get(url, { headers: signedHeaders(url, "GET") }, function (data, response) {
   console.log(data);
 });
 
 
-url    = "https://www.saltedge.com/api/v3/customers"
+url    = "https://www.saltedge.com/api/v4/customers"
 params = {
   data: {
     identifier: "my_unique_sdidentifier"
