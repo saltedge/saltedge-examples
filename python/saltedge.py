@@ -3,39 +3,17 @@ import requests
 import base64
 import time
 
-
-class PEMKeyLoader:
-    @staticmethod
-    def load_public_key(path_to_file):
-        """
-        :param path_to_file: string
-        :return: OpenSSL.crypto.PKey, The private key to verify with.
-        """
-        with open(path_to_file, "rb") as public_key:
-            keydata = public_key.read()
-        public_key = crypto.load_publickey(crypto.FILETYPE_PEM, keydata)
-        return public_key
-
-    @staticmethod
-    def load_private_key(path_to_file):
-        """
-        :param path_to_file: string
-        :return: OpenSSL.crypto.PKey, The private key to verify with.
-        """
-        with open(path_to_file, "rb") as private_key:
-            keydata = private_key.read()
-        private_key = crypto.load_privatekey(crypto.FILETYPE_PEM, keydata)
-        return private_key
-
-
 class SaltEdge:
-    digest = "sha1"
+    digest = "sha256"
 
-    def __init__(self, client_id, service_secret, private_path, public_path):
-        self.client_id = client_id
-        self.service_secret = service_secret
-        self._public_key = PEMKeyLoader.load_public_key(public_path)
-        self._private_key = PEMKeyLoader.load_private_key(private_path)
+    def __init__(self, app_id, secret, private_path):
+        self.app_id = app_id
+        self.secret = secret
+
+        with open(private_path, "rb") as private_key:
+            keydata = private_key.read()
+
+        self._private_key = crypto.load_privatekey(crypto.FILETYPE_PEM, keydata)
 
     def sign(self, message):
         """
@@ -57,51 +35,38 @@ class SaltEdge:
         message = "{expire}|{method}|{some_url}|{payload}".format(**locals())
         return self.sign(message)
 
-    def verify(self, message, signature):
-        """
-        Verifies the signature on a message.
-        :param message: string, The message to verify.
-        :param signature: string, The signature on the message.
-        :return:
-        """
-        return crypto.verify(self._public_key, base64.b64decode(signature), message, self.digest)
+    def generate_headers(self, expire):
+        return {
+            'Accept': 'application/json',
+            'Content-type': 'application/json',
+            'Expires-at': expire,
+            'App-id': self.app_id,
+            'Secret': self.secret
+        }
 
-    @staticmethod
-    def expires_at():
+    def expires_at(self):
         return str(time.time() + 60)
 
     def get(self, some_url):
-        expire = self.expires_at()
-        headers = {
-            'Accept': 'application/json',
-            'Content-type': 'application/json',
-            'Signature': self.generate_signature("GET", expire, some_url),
-            'Expires-at': expire,
-            'Client-id': self.client_id,
-            'Service-secret': self.service_secret
-        }
+        expire  = self.expires_at()
+        headers = self.generate_headers(expire)
+        headers['Signature'] = self.generate_signature("GET", expire, some_url)
         return requests.get(some_url, headers=headers)
 
     def post(self, some_url, payload):
-        expire = self.expires_at()
-        headers = {
-            'accept': 'application/json',
-            'content-type': 'application/json',
-            'Signature': self.generate_signature("POST", expire, some_url, payload),
-            'Expires-at': expire,
-            'Client-id': self.client_id,
-            'Service-secret': self.service_secret
-        }
+        expire  = self.expires_at()
+        headers = self.generate_headers(expire)
+        headers['Signature'] = self.generate_signature("POST", expire, some_url, payload)
         return requests.post(some_url, data=payload, headers=headers)
 
     def put(self, some_url, payload):
-        expire = self.expires_at()
-        headers = {
-            'accept': 'application/json',
-            'content-type': 'application/json',
-            'Signature': self.generate_signature("POST", expire, some_url, payload),
-            'Expires-at': expire,
-            'Client-id': self.client_id,
-            'Service-secret': self.service_secret
-        }
+        expire  = self.expires_at()
+        headers = self.generate_headers(expire)
+        headers['Signature'] = self.generate_signature("POST", expire, some_url, payload)
         return requests.put(some_url, data=payload, headers=headers)
+
+    def delete(self, some_url, payload):
+        expire  = self.expires_at()
+        headers = self.generate_headers(expire)
+        headers['Signature'] = self.generate_signature("DELETE", expire, some_url, payload)
+        return requests.delete(some_url, data=payload, headers=headers)
