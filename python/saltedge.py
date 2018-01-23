@@ -25,7 +25,7 @@ class SaltEdge:
 
     def generate_signature(self, method, expire, some_url, payload=""):
         """
-        Generates base64 encoded SHA1 signature of the string given params, signed with the client's private key.
+        Generates base64 encoded SHA256 signature of the string given params, signed with the client's private key.
         :param method:  uppercase method of the HTTP request. Example: GET, POST, PATCH, PUT, DELETE, etc.;
         :param expire:  the full requested URL, with all its complementary parameters;
         :param some_url: the request post body. Should be left empty if it is a GET request, or the body is empty;
