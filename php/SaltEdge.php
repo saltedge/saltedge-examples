@@ -40,10 +40,10 @@ class SaltEdge
      *
      * @throws InvalidArgumentException when the path to the private key or the password was incorrect
      */
-    public function __construct($clientId, $serviceSecret, $privateKeyPath, $privateKeyPass = null)
+    public function __construct($appId, $secret, $privateKeyPath, $privateKeyPass = null)
     {
-        $this->clientId = $clientId;
-        $this->serviceSecret = $serviceSecret;
+        $this->appId = $appId;
+        $this->secret = $secret;
 
         // Load the private key
         $this->privateKey = openssl_get_privatekey($privateKeyPath, $privateKeyPass);
@@ -72,9 +72,9 @@ class SaltEdge
      *
      * @return static
      */
-    public static function create($clientId, $serviceSecret, $privateKeyPath, $privateKeyPass = null)
+    public static function create($appId, $secret, $privateKeyPath, $privateKeyPass = null)
     {
-        return new static($clientId, $serviceSecret, $privateKeyPath, $privateKeyPass);
+        return new static($appId, $secret, $privateKeyPath, $privateKeyPass);
     }
 
     /**
@@ -140,7 +140,12 @@ class SaltEdge
         $signatureCipher = "";
 
         // Sign the data
-        $signingResult = openssl_sign($signature, $signatureCipher, $this->privateKey);
+        $signingResult = openssl_sign(
+          $signature,
+          $signatureCipher,
+          $this->privateKey,
+          OPENSSL_ALGO_SHA256
+        );
 
         if (!$signingResult) {
             // Preparing the signature failed.
@@ -157,8 +162,8 @@ class SaltEdge
                 "Content-Type: application/json",
                 "Expires-at: {$expires}",
                 "Signature: {$signatureCipher}",
-                "Client-id: {$this->clientId}",
-                "Service-secret: {$this->serviceSecret}",
+                "App-id: {$this->appId}",
+                "Secret: {$this->secret}",
             ),
             CURLOPT_RETURNTRANSFER => true,
             // Enable for debugging purposes
