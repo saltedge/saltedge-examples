@@ -11,9 +11,9 @@ namespace SESample
     class SaltEdge
     {
         const int REQUEST_EXPIRES_MINUTES = 3;
-        const string CLIENT_ID            = "CLIENT_ID";
-        const string SERIVICE_SECRET      = "CLIENT_SECRET";
-        const string PRIVATE_KEY_PATH     = @"c:\keys\tt.pem";
+        const string APP_ID           = "APP_ID";
+        const string SECRET           = "SECRET";
+        const string PRIVATE_KEY_PATH = @"c:\keys\private.pem";
 
         private static AsymmetricKeyParameter PRIVATE_KEY = null;
 
@@ -53,8 +53,8 @@ namespace SESample
             WebRequest request = WebRequest.Create(url);
 
             request.Method = method;
-            request.Headers["Client-id"] = CLIENT_ID;
-            request.Headers["Service-secret"] = SERIVICE_SECRET;
+            request.Headers["App-id"] = APP_ID;
+            request.Headers["Secret"] = SECRET;
             request.ContentType = "application/json";
 
             return request;
@@ -104,7 +104,7 @@ namespace SESample
 
         private static byte[] sign(byte[] bytes)
         {
-            ISigner sig = SignerUtilities.GetSigner("SHA1withRSA");
+            ISigner sig = SignerUtilities.GetSigner("SHA256withRSA");
             sig.Init(true, PRIVATE_KEY);
             sig.BlockUpdate(bytes, 0, bytes.Length);
             return sig.GenerateSignature();
