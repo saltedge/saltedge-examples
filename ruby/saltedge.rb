@@ -8,6 +8,10 @@ class Saltedge
   attr_reader :app_id, :secret, :private_key
   EXPIRATION_TIME = 60
 
+  def self.verify_signature(public_key, data, signature)
+    public_key.verify(OpenSSL::Digest::SHA256.new, Base64.decode64(signature), data)
+  end
+
   def initialize(app_id, secret, private_pem_path)
     @app_id      = app_id
     @secret      = secret
