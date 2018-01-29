@@ -1,19 +1,21 @@
-require_relative "signature"
-
 require "json"
 require "base64"
 require "openssl"
-require "digest/sha1"
+require "digest"
 require "rest-client"
 
 class Saltedge
-  attr_reader :client_id, :service_secret, :private_pem_path
+  attr_reader :app_id, :secret, :private_key
   EXPIRATION_TIME = 60
 
-  def initialize(client_id, service_secret, private_pem_path)
-    @client_id        = client_id
-    @service_secret   = service_secret
-    @private_pem_path = File.open(private_pem_path)
+  def self.verify_signature(public_key, data, signature)
+    public_key.verify(OpenSSL::Digest::SHA256.new, Base64.decode64(signature), data)
+  end
+
+  def initialize(app_id, secret, private_pem_path)
+    @app_id      = app_id
+    @secret      = secret
+    @private_key = OpenSSL::PKey::RSA.new(File.open(private_pem_path))
   end
 
   def request(method, url, params={})
@@ -28,33 +30,26 @@ class Saltedge
       method:  hash[:method],
       url:     hash[:url],
       payload: hash[:params],
+      log:     Logger.new(STDOUT),
       headers: {
-        "Accept"         => "application/json",
-        "Content-type"   => "application/json",
-        "Expires-at"     => hash[:expires_at],
-        "Signature"      => sign_request(hash),
-        "Client-id"      => client_id,
-        "Service-secret" => service_secret
+        "Accept"       => "application/json",
+        "Content-type" => "application/json",
+        "Expires-at"   => hash[:expires_at],
+        "Signature"    => sign_request(hash),
+        "App-Id"       => app_id,
+        "Secret"       => secret
       }
     )
-  end
-
-  def verify_signature(public_key, data, signature)
-    Signature.verify(public_key, data, signature)
-  end
-
-  def sign_request(hash)
-    Signature.sign(rsa_key, "#{hash[:expires_at]}|#{hash[:method]}|#{hash[:url]}|#{hash[:params]}")
+  rescue RestClient::Exception => error
+    pp JSON.parse(error.response)
   end
 
 private
 
-  def rsa_key
-    @rsa_key ||= OpenSSL::PKey::RSA.new(@private_pem_path)
-  end
-
-  def digest
-    OpenSSL::Digest::SHA1.new
+  def sign_request(hash)
+    data = "#{hash[:expires_at]}|#{hash[:method].to_s.upcase}|#{hash[:url]}|#{hash[:params]}"
+    pp data
+    Base64.encode64(private_key.sign(OpenSSL::Digest::SHA256.new, data)).delete("\n")
   end
 
   def as_json(params)

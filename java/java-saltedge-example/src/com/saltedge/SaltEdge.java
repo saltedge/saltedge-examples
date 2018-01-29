@@ -29,9 +29,9 @@ import com.google.gson.Gson;
 public class SaltEdge {
 
     public final static int REQUEST_EXPIRES_MINUTES = 3;
-    public final static String CLIENT_ID            = "CLIENT_ID";
-    public final static String SERIVICE_SECRET      = "SERIVICE_SECRET";
-    public final String PRIVATE_KEY_PATH     = "./res/com/saltedge/private.pem";
+    public final static String APP_ID               = "APP_ID";
+    public final static String SECRET               = "SECRET";
+    public final String PRIVATE_KEY_PATH            = "private.pem";
 	private static PEMKeyPair PRIVATE_KEY = null;
 
 	public SaltEdge() {
@@ -115,8 +115,8 @@ public class SaltEdge {
 			URL obj = new URL(url);
 			con = (HttpURLConnection) obj.openConnection();
 			con.setRequestMethod(method);
-			con.setRequestProperty("Client-id", CLIENT_ID);
-			con.setRequestProperty("Service-secret", SERIVICE_SECRET);
+			con.setRequestProperty("App-id", APP_ID);
+			con.setRequestProperty("Secret", SECRET);
 			con.setRequestProperty("Content-Type", "application/json");
 		} catch (ProtocolException e) {
 			System.out.println("ProtocolException : " + e);
@@ -155,7 +155,7 @@ public class SaltEdge {
     	  KeyPair keyPair=null;
     	  Signature signature = null;
 		try {
-			signature = Signature.getInstance("SHA1withRSA");
+			signature = Signature.getInstance("SHA256withRSA");
 			signature.initSign(new JcaPEMKeyConverter().getPrivateKey(PRIVATE_KEY.getPrivateKeyInfo()));
 			signature.update(bytes);
 		} catch (NoSuchAlgorithmException e) {
