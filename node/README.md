@@ -1,5 +1,5 @@
 Example of integrating Salt Edge API with Node JS.
-Note, right after you clone this code, you should generate RSA key pair as described in [docs.saltedge.com](https://docs.saltedge.com/guides/signature/)
+Note, right after you clone this code, you should generate your private.pem and public.pem as described in [docs.saltedge.com](https://docs.saltedge.com/guides/signature/) and put the public key content in your [dashboard](https://www.saltedge.com/keys_and_secrets)
 Then paste private key's content into private.pem and create `credentials.json` with the following content:
 
 ```
