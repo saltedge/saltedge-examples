@@ -44,6 +44,22 @@ class SaltEdge:
             'Secret': self.secret
         }
 
+    def verify(self, message, signature):
+        """
+        Verifies the signature on a message.
+        :param message: string, The message to verify.
+        :param signature: string, The signature on the message.
+        :return:
+        """
+        x509 = crypto.X509()
+        x509.set_pubkey(self._private_key)
+        try:
+            crypto.verify(x509, base64.b64decode(signature), message, self.digest)
+            return True
+        except crypto.Error:
+            return False
+
+
     def expires_at(self):
         return str(time.time() + 60)
 
