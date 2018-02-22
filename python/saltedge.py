@@ -6,6 +6,26 @@ import time
 class SaltEdge:
     digest = "sha256"
 
+    @classmethod
+    def verify(cls, path_to_public_key, message, signature):
+        """
+        Verifies the signature on a message.
+        :param path_to_public_key: string, Absolute or relative path to Spectre public key
+        :param message: string, The message to verify.
+        :param signature: string, The signature on the message.
+        :return:
+        """
+        x509 = crypto.X509()
+        with open(path_to_public_key, 'r') as public_key_data:
+            public_key = crypto.load_publickey(crypto.FILETYPE_PEM, public_key_data)
+        x509.set_pubkey(public_key)
+
+        try:
+            crypto.verify(x509, base64.b64decode(signature), message, cls.digest)
+            return True
+        except crypto.Error:
+            return False
+
     def __init__(self, app_id, secret, private_path):
         self.app_id = app_id
         self.secret = secret
