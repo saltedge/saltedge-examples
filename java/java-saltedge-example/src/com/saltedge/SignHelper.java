@@ -14,7 +14,6 @@ import java.security.spec.X509EncodedKeySpec;
 public class SignHelper {
 
     public static boolean verify(String plainText, String signString, PublicKey publicKey) throws Exception {
-
         byte[] data = plainText.getBytes("ISO-8859-1");
 
         Signature signature = Signature.getInstance("SHA256withRSA");
@@ -25,7 +24,7 @@ public class SignHelper {
         return signature.verify(signByte);
     }
 
-    public static PublicKey getPemPublicKey(String filename, String algorithm) throws Exception {
+    public static PublicKey readPublicKey(String filename, String algorithm) throws Exception {
         File f = new File(filename);
         FileInputStream fis = new FileInputStream(f);
         DataInputStream dis = new DataInputStream(fis);
@@ -37,12 +36,10 @@ public class SignHelper {
         String publicKeyPEM = temp.replace("-----BEGIN PUBLIC KEY-----\n", "");
         publicKeyPEM = publicKeyPEM.replace("-----END PUBLIC KEY-----", "");
 
-
         Base64 b64 = new Base64();
-        byte [] decoded = b64.decode(publicKeyPEM);
+        byte[] decoded = b64.decode(publicKeyPEM);
 
-        X509EncodedKeySpec spec =
-                new X509EncodedKeySpec(decoded);
+        X509EncodedKeySpec spec = new X509EncodedKeySpec(decoded);
         KeyFactory kf = KeyFactory.getInstance(algorithm);
         return kf.generatePublic(spec);
     }

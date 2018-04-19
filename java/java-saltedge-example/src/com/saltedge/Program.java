@@ -8,18 +8,15 @@ import java.security.spec.InvalidKeySpecException;
 public class Program {
     static public final String SPECTRE_PUBLIC_KEY_PATH = "saltedge_public.pem";
     static public final String PUBLIC_KEY_ALGORITHM = "RSA";
-    static public final String CALLBACK_URL = "URL"; // e.g. https://872ce257.ngrok.io/callback";
-    static public final String CALLBACK_BODY = "BODY"; // e.g. "{\"data\":{\"login_id\":\"990002\",\"customer_id\":\"802512\",\"custom_fields\":{}},\"meta\":{\"version\":\"4\",\"time\":\"2018-04-18T14:05:01.130Z\"}}";
-
     // HTTP_SIGNATURE header
     static public final String SIGNATURE = "SIGNATURE"; // e.g. "E9ZuBqpo52sX4Wjbeve4/JD/HzDFeRndnSZ7rn9b1Ljj9FLDGQjakdGhJDuTX/2jeB+PL2Yf6NmwyvS/qe5DJcYETnHyFbsIAqLAnj/kJpC9YDe4mO4lKZQeY/1gsRiEi+G+WH9lrLywgev2zivzOCjRQ8nTg0iqLci4hSYyfoBi2cqfF0GJk5+IJaTRqixMNk0Gd6EQN4ZbEARlmGQsmp0m+lEoxEGfqJNuqfIjmB5QZVRVHmvKuhg8AXbLJYThexhFoZoX35u2w0EuQ44DUrGo9Afy7qUHiVlL059/oG3BlKsgrDeCyDJzWYKsvaYYNgjth6XPWcv5C2crM/kiLw==";
 
     public static void main(String[] arg) {
         System.out.println(new SaltEdge().get("https://bucket.banksalt.com/api/v4/countries"));
         verifySignature(); // signature verifiction flow on callback
-
-        // This is an example of a post request with a payload. Keep in mind the the serialized payload
-        // is also taken into account when computing the signature.
+        
+//        This is an example of a post request with a payload. Keep in mind the the serialized payload
+//        is also taken into account when computing the signature.
 //
 //        String str = "{ \"data\": {\"identifier\": \"javaTestCustomer\" }}";
 //
@@ -30,10 +27,13 @@ public class Program {
     }
 
     private static void verifySignature() {
-        String data = CALLBACK_URL + "|" + CALLBACK_BODY;
+        String callbackUrl = "URL"; // e.g. https://872ce257.ngrok.io/callback";
+        String callbackBody = "BODY"; // e.g. "{\"data\":{\"login_id\":\"990002\",\"customer_id\":\"802512\",\"custom_fields\":{}},\"meta\":{\"version\":\"4\",\"time\":\"2018-04-18T14:05:01.130Z\"}}";
+
+        String data = callbackUrl + "|" + callbackBody;
 
         try {
-            PublicKey publicKey = SignHelper.getPemPublicKey(PUBLIC_KEY_PATH, PUBLIC_KEY_ALGORITHM);
+            PublicKey publicKey = SignHelper.readPublicKey(PUBLIC_KEY_PATH, PUBLIC_KEY_ALGORITHM);
             System.out.println("SIGNATURE BELONGS TO SALTEDGE: " + SignHelper.verify(data, SIGNATURE, publicKey));
         } catch (IOException e) {
             e.printStackTrace();
