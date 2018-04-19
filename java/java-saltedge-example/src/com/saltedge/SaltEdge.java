@@ -19,7 +19,7 @@ public class SaltEdge {
 
     public final static int REQUEST_EXPIRES_MINUTES = 3;
     public final static String APP_ID               = "APP_ID";
-    public final static String SECRET               = "APP_SECRET";
+    public final static String SECRET               = "SECRET";
     public final String PRIVATE_KEY_PATH            = "private.pem";
 	private static PEMKeyPair PRIVATE_KEY = null;
 

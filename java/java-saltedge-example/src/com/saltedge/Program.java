@@ -6,7 +6,7 @@ import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 
 public class Program {
-    static public final String PUBLIC_KEY_PATH = "saltedge_public.pem";
+    static public final String SPECTRE_PUBLIC_KEY_PATH = "saltedge_public.pem";
     static public final String PUBLIC_KEY_ALGORITHM = "RSA";
     static public final String CALLBACK_URL = "URL"; // e.g. https://872ce257.ngrok.io/callback";
     static public final String CALLBACK_BODY = "BODY"; // e.g. "{\"data\":{\"login_id\":\"990002\",\"customer_id\":\"802512\",\"custom_fields\":{}},\"meta\":{\"version\":\"4\",\"time\":\"2018-04-18T14:05:01.130Z\"}}";
