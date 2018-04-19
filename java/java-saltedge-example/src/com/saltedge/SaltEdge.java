@@ -1,30 +1,19 @@
 package com.saltedge;
 
+import com.google.gson.Gson;
+import org.bouncycastle.openssl.PEMException;
+import org.bouncycastle.openssl.PEMKeyPair;
+import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
+import org.bouncycastle.util.encoders.Base64;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.security.InvalidKeyException;
-import java.security.KeyPair;
-import java.security.NoSuchAlgorithmException;
-import java.security.Signature;
-import java.security.SignatureException;
+import java.security.*;
 import java.util.Calendar;
-
-import org.bouncycastle.util.encoders.Base64;
-import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
-import org.bouncycastle.openssl.PEMException;
-import org.bouncycastle.openssl.PEMKeyPair;
-import org.bouncycastle.openssl.PEMParser;
-import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
-
-import com.google.gson.Gson;
 
 public class SaltEdge {
 
@@ -35,7 +24,7 @@ public class SaltEdge {
 	private static PEMKeyPair PRIVATE_KEY = null;
 
 	public SaltEdge() {
-        PRIVATE_KEY = readPrivateKey(PRIVATE_KEY_PATH);
+        PRIVATE_KEY = SignHelper.readPrivateKey(PRIVATE_KEY_PATH);
     }
 
 	// HTTP GET request
@@ -168,29 +157,7 @@ public class SaltEdge {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}        
-  	  return signature.sign(); 
+  	  return signature.sign();
     }
-    
-   	public PEMKeyPair readPrivateKey(String privateKeyFileName) {
-   		AsymmetricCipherKeyPair keyPair = null;
-        File f = new File(privateKeyFileName);
-        FileReader fileReader = null;
-		try {
-			fileReader = new FileReader(f);
-		} catch (FileNotFoundException e) {
-			System.out.println("FileNotFoundException : " + e);
-			e.printStackTrace();
-			return null;
-		}
-        PEMKeyPair obj = null;
-		try {
-			obj = (PEMKeyPair) new PEMParser(fileReader).readObject();
-		} catch (IOException e) {
-			System.out.println("IOException : " + e);
-			e.printStackTrace();
-			return null;
-		}
-        return obj;
-	}
 
 }
