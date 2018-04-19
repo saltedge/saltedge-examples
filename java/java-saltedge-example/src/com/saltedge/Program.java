@@ -14,7 +14,7 @@ public class Program {
     public static void main(String[] arg) {
         System.out.println(new SaltEdge().get("https://bucket.banksalt.com/api/v4/countries"));
         verifySignature(); // signature verifiction flow on callback
-        
+
 //        This is an example of a post request with a payload. Keep in mind the the serialized payload
 //        is also taken into account when computing the signature.
 //
