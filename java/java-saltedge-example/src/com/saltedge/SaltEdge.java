@@ -5,7 +5,6 @@ import org.bouncycastle.openssl.PEMException;
 import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.bouncycastle.util.encoders.Base64;
-
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
