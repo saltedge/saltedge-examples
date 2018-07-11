@@ -8,6 +8,38 @@ using Newtonsoft.Json;
 
 namespace SESample
 {
+    class Callback
+    {
+        private RsaKeyParameters publicKey;
+
+        public Callback(String publicKeyPath) {
+            publicKey = readPublicKey(publicKeyPath);
+        }
+
+        public bool verify(String url, String requestBody, String signature) {
+            ISigner sig = SignerUtilities.GetSigner("SHA256withRSA");
+            sig.Init(false, publicKey);
+
+            String input = string.Format("{0}|{1}", url, requestBody);
+            byte[] bytes = System.Text.Encoding.UTF8.GetBytes(input);
+
+            byte[] decodedSignature = Convert.FromBase64String(signature);
+
+            sig.BlockUpdate(bytes, 0, bytes.Length);
+            return sig.VerifySignature(decodedSignature);
+        }
+
+        private RsaKeyParameters readPublicKey(string fileName)
+        {
+            RsaKeyParameters keyPair;
+
+            using (var reader = File.OpenText(fileName))
+                keyPair = (RsaKeyParameters)new PemReader(reader).ReadObject();
+
+            return keyPair;
+        }
+    }
+
     class SaltEdge
     {
         const int REQUEST_EXPIRES_MINUTES = 3;
