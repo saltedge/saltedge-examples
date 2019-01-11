@@ -136,13 +136,12 @@ class SaltEdge
         $payload = is_string($payload) ? $payload : json_encode($payload);
 
         // Prepare the signature
-        $signature = $expires . "|" . $method . "|" . $url . "|" . $payload;
-        $signatureCipher = "";
+        $data = $expires . "|" . $method . "|" . $url . "|" . $payload;
 
         // Sign the data
         $signingResult = openssl_sign(
+          $data,
           $signature,
-          $signatureCipher,
           $this->privateKey,
           OPENSSL_ALGO_SHA256
         );
@@ -153,7 +152,7 @@ class SaltEdge
         }
 
         // The signature should be a base64 encoded string
-        $signingResult = base64_encode($signingResult);
+        $signature = base64_encode($signature);
 
         // Prepare curl options
         $curlOptions = array(
@@ -161,7 +160,7 @@ class SaltEdge
             CURLOPT_HTTPHEADER => array(
                 "Content-Type: application/json",
                 "Expires-at: {$expires}",
-                "Signature: {$signingResult}",
+                "Signature: {$signature}",
                 "App-id: {$this->appId}",
                 "Secret: {$this->secret}",
             ),
