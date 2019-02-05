@@ -1,0 +1,7 @@
+source "https://rubygems.org"
+
+gem 'jwt'
+gem 'rest-client'
+gem 'json'
+gem 'pp'
+gem 'pry'

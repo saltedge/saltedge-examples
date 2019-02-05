@@ -1,0 +1,8 @@
+software_statement_id: a123
+sign_kid: a345
+transport_kid: a678
+
+redirect_uris:
+  - https://app.getpostman.com/oauth2/callback
+  - https://www.saltedge.com/connect/oauth_callback
+  - https://bucket.banksalt.com/connect/oauth_callback
