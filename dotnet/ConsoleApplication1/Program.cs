@@ -10,7 +10,7 @@ namespace SESample
     {
         static void Main(string[] args)
         {
-            System.Console.WriteLine(SaltEdge.get("https://www.saltedge.com/api/v4/countries"));
+            System.Console.WriteLine(SaltEdge.get("https://www.saltedge.com/api/v5/countries"));
 
             // This is an example of a post request with a payload. Keep in mind the the serialized payload
             // is also taken into account when computing the signature.
