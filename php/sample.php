@@ -15,7 +15,7 @@
 require "SaltEdge.php";
 
 // Client access credentials
-define('APP_ID', "APP_ID");
+define("APP_ID", "APP_ID");
 define("SECRET", "SECRET");
 
 // Private key details
@@ -28,7 +28,7 @@ try {
     $seClient = new SaltEdge(APP_ID, SECRET, $privateKeyPath, $privateKeyPass);
 
     // This is how a GET request is made
-    echo $seClient->get("https://www.saltedge.com/api/v4/countries");
+    echo $seClient->get("https://www.saltedge.com/api/v5/countries");
 
     // This is how a POST request is made
     /*
@@ -38,7 +38,7 @@ try {
         ),
     );
 
-    echo $seClient->post("https://www.saltedge.com/api/v4/customers", $payload);
+    echo $seClient->post("https://www.saltedge.com/api/v5/customers", $payload);
     */
 
     $seClient->shutdown();
