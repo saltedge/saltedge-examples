@@ -3,8 +3,8 @@ Note, right after you clone this code, you should generate your private.pem and 
 
 ```
 api = Saltedge.new("APP_ID", "SECRET", "private_pem_path")
-api.request(:get, "https://www.saltedge.com/api/v4/countries")
-api.request(:post, "https://www.saltedge.com/api/v4/customers/", {"data" => {"identifier" => "my_unique_identifier"}})
+api.request(:get, "https://www.saltedge.com/api/v5/countries")
+api.request(:post, "https://www.saltedge.com/api/v5/customers/", {"data" => {"identifier" => "my_unique_identifier"}})
 ```
 
 And here is a link to our [documentation](https://docs.saltedge.com/), where you can find step-by-step instructions.
