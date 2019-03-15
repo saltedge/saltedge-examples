@@ -7,8 +7,9 @@ export default class App extends React.Component {
     super(props)
 
     // NOTE: Customer secret is returned when you create a customer using
-    // https://docs.saltedge.com/v4_apps/reference/#customers-create
-    // https://docs.saltedge.com/v4_apps/guides/authentication/
+    // https://docs.saltedge.com/v5_apps/reference/#customers-create
+    // https://docs.saltedge.com/general/#authentication
+
     this.state = {
       connecting:     false,
       customerSecret: ''
@@ -36,7 +37,7 @@ export default class App extends React.Component {
   onConnect() {
     this.setState({connecting: true})
 
-    request("https://www.saltedge.com/api/v4/tokens/create", {
+    request("https://www.saltedge.com/api/v5/connect_sessions/create", {
       method:         "POST",
       customerSecret: this.state.customerSecret,
       body: {
@@ -70,7 +71,7 @@ export default class App extends React.Component {
       return (
         // NOTE: To retrieve login data, you need to call `request` function
         // with loginSecret set to this.state.login.secret, eg:
-        // request("https://www.saltedge.com/api/v4/accounts", {
+        // request("https://www.saltedge.com/api/v5/accounts", {
         //   method:         "GET",
         //   customerSecret: this.state.customerSecret,
         //   loginSecret:    this.state.login.secret
@@ -79,7 +80,7 @@ export default class App extends React.Component {
         <Text>
           Login with id {this.state.login.login_id} connected. You can now use it
           to query the API and retrieve its accounts and transactions.
-          See https://docs.saltedge.com/v4_apps/reference/#accounts.
+          See https://docs.saltedge.com/v5_apps/reference/#accounts.
         </Text>
       )
     } else if (this.state.stage == "error") {
