@@ -4,6 +4,7 @@ using System.IO;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Crypto.Parameters;
 using Newtonsoft.Json;
 
 namespace SESample
@@ -82,6 +83,7 @@ namespace SESample
 
         private static WebRequest buildRequest(string method, string url)
         {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             WebRequest request = WebRequest.Create(url);
 
             request.Method = method;
