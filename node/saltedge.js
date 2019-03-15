@@ -49,7 +49,7 @@ function request(options) {
   });
 }
 
-url = "https://www.saltedge.com/api/v4/countries"
+url = "https://www.saltedge.com/api/v5/countries"
 
 request({
   method:  "GET",
@@ -61,7 +61,7 @@ request({
 })
 
 
-url    = "https://www.saltedge.com/api/v4/customers"
+url    = "https://www.saltedge.com/api/v5/customers"
 params = {
   data: {
     identifier: "my_unique_sdidentifier"
