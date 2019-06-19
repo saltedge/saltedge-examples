@@ -25,13 +25,15 @@ function signedHeaders(url, method, params) {
 }
 
 // Use this function to verify signature in callbacks
+// https://docs.saltedge.com/account_information/v5/#callbacks-request_identification
+//
 // signature - could be obtained from headers['signature']
 // callback_url - url that you add in SE dashboard
 // post_body - request body as string
 function verifySignature(signature, callback_url, post_body) {
   payload = callback_url + "|" + post_body
 
-  var publicKey = fs.readFileSync('se_callbacks_public_v5.pem');
+  var publicKey = fs.readFileSync('../spectre_public.pem');
   var verifier = crypto.createVerify('sha256');
   verifier.update(payload);
 
