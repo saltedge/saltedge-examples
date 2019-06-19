@@ -1,10 +1,8 @@
-var NodeRSA     = require("node-rsa");
 var fs          = require("fs");
 var credentials = require("./credentials.json");
 var https       = require("https");
 var util        = require("util");
-
-var key = new NodeRSA(fs.readFileSync("private.pem"), 'private');
+var crypto      = require("crypto");
 
 function signedHeaders(url, method, params) {
   expires_at = Math.floor(new Date().getTime() / 1000 + 60)
@@ -12,14 +10,34 @@ function signedHeaders(url, method, params) {
 
   if (method == "POST") { payload += JSON.stringify(params) }
 
+  var privateKey = fs.readFileSync('private.pem');
+  var signer = crypto.createSign('sha256');
+  signer.update(payload);
+
   return {
-    "Accept":         "application/json",
-    "Content-Type":   "application/json",
-    "App-id":         credentials.app_id,
-    "Secret":         credentials.secret,
-    "Expires-at":     expires_at,
-    "Signature":      key.sign(payload, "base64")
+    "Accept":       "application/json",
+    "Content-Type": "application/json",
+    "App-id":       credentials.app_id,
+    "Secret":       credentials.secret,
+    "Expires-at":   expires_at,
+    "Signature":    signer.sign(privateKey,'base64'),
   }
+}
+
+// Use this function to verify signature in callbacks
+// https://docs.saltedge.com/account_information/v5/#callbacks-request_identification
+//
+// signature - could be obtained from headers['signature']
+// callback_url - url that you add in SE dashboard
+// post_body - request body as string
+function verifySignature(signature, callback_url, post_body) {
+  payload = callback_url + "|" + post_body
+
+  var publicKey = fs.readFileSync('../spectre_public.pem');
+  var verifier = crypto.createVerify('sha256');
+  verifier.update(payload);
+
+  return verifier.verify(publicKey, signature,'base64');
 }
 
 function request(options) {
@@ -77,4 +95,3 @@ request({
 }).catch((data) => {
   console.error(data)
 })
-
