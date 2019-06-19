@@ -8,7 +8,5 @@
   },
   "author": "Ivan Danci",
   "license": "ISC",
-  "dependencies": {
-    "node-rsa": "^0.4.2"
-  }
+  "dependencies": {}
 }
