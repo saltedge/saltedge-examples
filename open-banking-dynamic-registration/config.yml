@@ -1,0 +1,17 @@
+# Software Statement ID
+ssid: <*>
+
+# Organisation ID
+org_id: <*>
+
+# These should match the key/certificate pair you put inside the cert directory
+signing_key_id: <*>
+transport_key_id: <*>
+
+# openid is required
+# the rest of the scopes can be adjusted according to your needs
+scope: openid accounts payments
+
+# Modify this list to match the one in your software statement
+redirect_uris:
+  - https://example.com/oauth/callback
