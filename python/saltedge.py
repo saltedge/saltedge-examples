@@ -47,7 +47,7 @@ class SaltEdge:
         """
         Generates base64 encoded SHA256 signature of the string given params, signed with the client's private key.
         :param method: uppercase method of the HTTP request. Example: GET, POST, PATCH, PUT, DELETE, etc.;
-        :param expire: timestamp of when signature will expire
+        :param expire: request expiration time as a UNIX timestamp in UTC timezone. Recommended value is 1 minute from now. The maximum value is 1 hour from now.
         :param some_url: the full requested URL, with all its complementary parameters;
         :param payload: the request post body. Should be left empty if it is a GET request, or the body is empty;
         :return: base64 encoded SHA1 signature
