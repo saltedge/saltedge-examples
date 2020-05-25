@@ -1,7 +1,7 @@
 from saltedge import SaltEdge
 import json
 
-app = SaltEdge("client-id", "service-secret", "./private.pem")
+app = SaltEdge("app-id", "service-secret", "./private.pem")
 
 url = "https://www.saltedge.com/api/v5/customers/"
 payload = json.dumps({"data": {"identifier": "some_uniq_identifier"}})
