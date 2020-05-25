@@ -3,6 +3,7 @@ import requests
 import base64
 import time
 
+
 class SaltEdge:
     digest = "sha256"
 
@@ -16,7 +17,7 @@ class SaltEdge:
         :return:
         """
         x509 = crypto.X509()
-        with open(path_to_public_key, 'r') as public_key_data:
+        with open(path_to_public_key, "r") as public_key_data:
             public_key = crypto.load_publickey(crypto.FILETYPE_PEM, public_key_data)
         x509.set_pubkey(public_key)
 
@@ -57,36 +58,40 @@ class SaltEdge:
 
     def generate_headers(self, expire):
         return {
-            'Accept': 'application/json',
-            'Content-type': 'application/json',
-            'Expires-at': expire,
-            'App-id': self.app_id,
-            'Secret': self.secret
+            "Accept": "application/json",
+            "Content-type": "application/json",
+            "Expires-at": expire,
+            "App-id": self.app_id,
+            "Secret": self.secret,
         }
 
     def expires_at(self):
         return str(time.time() + 60)
 
     def get(self, some_url):
-        expire  = self.expires_at()
+        expire = self.expires_at()
         headers = self.generate_headers(expire)
-        headers['Signature'] = self.generate_signature("GET", expire, some_url)
+        headers["Signature"] = self.generate_signature("GET", expire, some_url)
         return requests.get(some_url, headers=headers)
 
     def post(self, some_url, payload):
-        expire  = self.expires_at()
+        expire = self.expires_at()
         headers = self.generate_headers(expire)
-        headers['Signature'] = self.generate_signature("POST", expire, some_url, payload)
+        headers["Signature"] = self.generate_signature(
+            "POST", expire, some_url, payload
+        )
         return requests.post(some_url, data=payload, headers=headers)
 
     def put(self, some_url, payload):
-        expire  = self.expires_at()
+        expire = self.expires_at()
         headers = self.generate_headers(expire)
-        headers['Signature'] = self.generate_signature("POST", expire, some_url, payload)
+        headers["Signature"] = self.generate_signature("PUT", expire, some_url, payload)
         return requests.put(some_url, data=payload, headers=headers)
 
     def delete(self, some_url, payload):
-        expire  = self.expires_at()
+        expire = self.expires_at()
         headers = self.generate_headers(expire)
-        headers['Signature'] = self.generate_signature("DELETE", expire, some_url, payload)
+        headers["Signature"] = self.generate_signature(
+            "DELETE", expire, some_url, payload
+        )
         return requests.delete(some_url, data=payload, headers=headers)
