@@ -1,11 +1,10 @@
 asn1crypto==0.23.0
 certifi==2017.7.27.1
-cffi==1.11.0
+cffi==1.14.4
 chardet==3.0.4
-cryptography==2.3
+cryptography==3.2.1
 idna==2.6
 pycparser==2.18
-pyOpenSSL==17.5.0
-requests==2.18.4
+requests==2.25.0
 six==1.11.0
-urllib3==1.22
+urllib3==1.26.2
