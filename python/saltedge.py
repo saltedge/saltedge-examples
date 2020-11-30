@@ -1,7 +1,11 @@
-import OpenSSL.crypto as crypto
 import requests
 import base64
 import time
+
+from cryptography.exceptions import InvalidSignature
+from cryptography.hazmat.primitives import serialization, hashes
+from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.backends import default_backend
 
 
 class SaltEdge:
@@ -16,15 +20,20 @@ class SaltEdge:
         :param signature: string, The signature on the message.
         :return:
         """
-        x509 = crypto.X509()
-        with open(path_to_public_key, "r") as public_key_data:
-            public_key = crypto.load_publickey(crypto.FILETYPE_PEM, public_key_data)
-        x509.set_pubkey(public_key)
+        with open(path_to_public_key, "rb") as public_key_data:
+            public_key = serialization.load_pem_public_key(
+                public_key_data.read(), backend=default_backend()
+            )
 
         try:
-            crypto.verify(x509, base64.b64decode(signature), message, cls.digest)
+            public_key.verify(
+                base64.b64decode(signature),
+                bytes(message.encode("utf8")),
+                padding.PKCS1v15(),
+                hashes.SHA256(),
+            )
             return True
-        except crypto.Error:
+        except InvalidSignature:
             return False
 
     def __init__(self, app_id, secret, private_path):
@@ -32,9 +41,9 @@ class SaltEdge:
         self.secret = secret
 
         with open(private_path, "rb") as private_key:
-            keydata = private_key.read()
-
-        self._private_key = crypto.load_privatekey(crypto.FILETYPE_PEM, keydata)
+            self._private_key = serialization.load_pem_private_key(
+                private_key.read(), password=None, backend=default_backend()
+            )
 
     def sign(self, message):
         """
@@ -42,7 +51,11 @@ class SaltEdge:
         :param message: string, Message to be signed.
         :return: string, The signature of the message for the given key.
           """
-        return base64.b64encode(crypto.sign(self._private_key, message, self.digest))
+        return base64.b64encode(
+            self._private_key.sign(
+                bytes(message.encode("utf8")), padding.PKCS1v15(), hashes.SHA256()
+            )
+        )
 
     def generate_signature(self, method, expire, some_url, payload=""):
         """

@@ -3,3 +3,4 @@ private.pem
 public.pem
 *.pyc
 .DS_Store
+.python-version
