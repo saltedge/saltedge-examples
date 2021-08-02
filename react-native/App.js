@@ -44,8 +44,14 @@ export default class App extends React.Component {
         data: {
           // We need to tell Salt Edge to use postMessage for callback notifications
           javascript_callback_type: 'post_message',
-          include_fake_providers:   true,
-          fetch_scopes:             ['accounts', 'transactions']
+          consent: {
+            scopes: ['account_details', 'transactions_details']
+          },
+          attempt: {
+            return_to: "saltedge://sdk.example",
+            fetch_scopes: ["accounts", "transactions"]
+          },
+          include_fake_providers: true
         }
       }
     }).then(this.onApiResponse.bind(this))
