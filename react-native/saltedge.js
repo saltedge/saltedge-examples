@@ -1,5 +1,6 @@
 import React from 'react';
-import { WebView, StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
+import { WebView } from 'react-native-webview'
 import credentials from './credentials.json'
 
 export function request(url, options) {
