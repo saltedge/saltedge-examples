@@ -2,6 +2,7 @@
   "name": "empty-project-template",
   "main": "node_modules/expo/AppEntry.js",
   "private": true,
+  "license": "saltedge",
   "scripts": {
     "start": "npx expo start",
     "android": "npx expo start --android",
@@ -9,16 +10,22 @@
     "eject": "npx expo eject"
   },
   "dependencies": {
-    "expo": "^42.0.0",
-    "expo-cli": "^2.11.9",
-    "react": "16.13.1",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
-    "react-native-webview": "^11.6.5"
+    "expo": "^49.0.3",
+    "expo-cli": "^6.3.10",
+    "react": "18.2.0",
+    "react-dom": "^18.2.0",
+    "react-native": "0.72.3",
+    "react-native-web": "~0.19.6",
+    "react-native-webview": "13.2.2"
   },
   "devDependencies": {
-    "eslint": "^5.7.0",
-    "eslint-config-standard": "^12.0.0",
-    "eslint-plugin-promise": "^4.0.1",
-    "eslint-plugin-standard": "^4.0.0"
+    "@babel/core": "^7.20.0",
+    "@babel/preset-env": "^7.1.6",
+    "eslint": "^8.45.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^16.0.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "joi": "^17.9.2"
   }
 }
