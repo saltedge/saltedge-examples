@@ -11,8 +11,8 @@ export default class App extends React.Component {
     // https://docs.saltedge.com/general/#authentication
 
     this.state = {
-      connecting: false,
-      customerId: ""
+      connecting:     false,
+      customerSecret: ""
     }
   }
 
@@ -40,10 +40,10 @@ export default class App extends React.Component {
     this.setState({connecting: true})
 
     request("https://www.saltedge.com/api/v5/connect_sessions/create", {
-      method: "POST",
+      method:         "POST",
+      customerSecret: this.state.customerSecret,
       body:   {
         data: {
-          customer_id:              this.state.customerId,
           javascript_callback_type: "post_message", // We need to tell Salt Edge to use postMessage for callback notifications
           consent: {
             scopes: ["account_details", "transactions_details"]
@@ -60,8 +60,8 @@ export default class App extends React.Component {
   }
 
   onCallback(data) {
-    // {"data":{"connection_id":"111","stage":"fetching","secret":"","custom_fields":{}}}
-    // {"data":{"connection_id":"111","stage":"success","secret":"","custom_fields":{}}}
+    // {"data":{"connection_id":"111","stage":"fetching","secret":"SECRET","custom_fields":{}}}
+    // {"data":{"connection_id":"111","stage":"success","secret":"SECRET","custom_fields":{}}}
 
     this.setState({
       login: data.data,
@@ -81,9 +81,11 @@ export default class App extends React.Component {
     if (this.state.stage == "success") {
       return (
         // NOTE: To retrieve login data, you need to call `request` function
-        // with connection_id set to this.state.login.connection_id, eg:
-        // request(`https://www.saltedge.com/api/v5/accounts?connection_id=${this.state.login.connection_id}`, {
-        //   method: "GET",
+        // with loginSecret set to this.state.login.secret, eg:
+        // request("https://www.saltedge.com/api/v5/accounts", {
+        //   method:         "GET",
+        //   customerSecret: this.state.customerSecret,
+        //   loginSecret:    this.state.login.secret
         // })
 
         <Text>
