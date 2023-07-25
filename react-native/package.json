@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "expo": "^42.0.0",
-    "expo-cli": "^2.11.9",
+    "expo-cli": "^2.21.2",
     "react": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
     "react-native-webview": "^11.6.5"

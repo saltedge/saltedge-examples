@@ -1211,7 +1211,7 @@
     json5 "^1.0.1"
     write-file-atomic "^2.3.0"
 
-"@expo/json-file@8.2.32":
+"@expo/json-file@8.2.32", "@expo/json-file@^8.1.6":
   version "8.2.32"
   resolved "https://registry.npmjs.org/@expo/json-file/-/json-file-8.2.32.tgz"
   dependencies:
@@ -1219,7 +1219,7 @@
     json5 "^1.0.1"
     write-file-atomic "^2.3.0"
 
-"@expo/json-file@8.2.7", "@expo/json-file@^8.1.6":
+"@expo/json-file@8.2.7":
   version "8.2.7"
   resolved "https://registry.npmjs.org/@expo/json-file/-/json-file-8.2.7.tgz"
   dependencies:
@@ -3391,7 +3391,7 @@ caseless@~0.12.0:
   version "0.12.0"
   resolved "https://registry.npmjs.org/caseless/-/caseless-0.12.0.tgz"
 
-chalk@2.4.1, chalk@^2.1.0:
+chalk@2.4.1:
   version "2.4.1"
   resolved "https://registry.npmjs.org/chalk/-/chalk-2.4.1.tgz"
   dependencies:
@@ -3399,7 +3399,7 @@ chalk@2.4.1, chalk@^2.1.0:
     escape-string-regexp "^1.0.5"
     supports-color "^5.3.0"
 
-chalk@2.4.2, chalk@^2.0.0, chalk@^2.0.1, chalk@^2.4.1, chalk@^2.4.2:
+chalk@2.4.2, chalk@^2.0.0, chalk@^2.0.1, chalk@^2.1.0, chalk@^2.4.1, chalk@^2.4.2:
   version "2.4.2"
   resolved "https://registry.npmjs.org/chalk/-/chalk-2.4.2.tgz"
   dependencies:
@@ -3672,11 +3672,11 @@ command-exists@^1.2.8:
   version "1.2.9"
   resolved "https://registry.npmjs.org/command-exists/-/command-exists-1.2.9.tgz"
 
-commander@2.17.1, commander@2.17.x, commander@^2.9.0:
+commander@2.17.1, commander@2.17.x:
   version "2.17.1"
   resolved "https://registry.npmjs.org/commander/-/commander-2.17.1.tgz"
 
-commander@^2.18.0, commander@^2.19.0, commander@^2.20.0:
+commander@^2.18.0, commander@^2.19.0, commander@^2.20.0, commander@^2.9.0:
   version "2.20.3"
   resolved "https://registry.npmjs.org/commander/-/commander-2.20.3.tgz"
 
@@ -4847,9 +4847,9 @@ expo-asset@~8.3.3:
     path-browserify "^1.0.0"
     url-parse "^1.4.4"
 
-expo-cli@^2.11.9:
+expo-cli@^2.21.2:
   version "2.21.2"
-  resolved "https://registry.npmjs.org/expo-cli/-/expo-cli-2.21.2.tgz"
+  resolved "https://registry.yarnpkg.com/expo-cli/-/expo-cli-2.21.2.tgz#7e2d24f5c2de1cf9347fc7c9209a0053b9f6aa14"
   dependencies:
     "@expo/bunyan" "3.0.2"
     "@expo/config" "^2.0.4"
@@ -6218,7 +6218,7 @@ inquirer@5.2.0:
     strip-ansi "^4.0.0"
     through "^2.3.6"
 
-inquirer@6.2.1:
+inquirer@6.2.1, inquirer@^6.1.0:
   version "6.2.1"
   resolved "https://registry.npmjs.org/inquirer/-/inquirer-6.2.1.tgz"
   dependencies:
@@ -6251,24 +6251,6 @@ inquirer@^3.0.6:
     run-async "^2.2.0"
     rx-lite "^4.0.8"
     rx-lite-aggregates "^4.0.8"
-    string-width "^2.1.0"
-    strip-ansi "^4.0.0"
-    through "^2.3.6"
-
-inquirer@^6.1.0:
-  version "6.2.0"
-  resolved "https://registry.npmjs.org/inquirer/-/inquirer-6.2.0.tgz"
-  dependencies:
-    ansi-escapes "^3.0.0"
-    chalk "^2.0.0"
-    cli-cursor "^2.1.0"
-    cli-width "^2.0.0"
-    external-editor "^3.0.0"
-    figures "^2.0.0"
-    lodash "^4.17.10"
-    mute-stream "0.0.7"
-    run-async "^2.2.0"
-    rxjs "^6.1.0"
     string-width "^2.1.0"
     strip-ansi "^4.0.0"
     through "^2.3.6"
