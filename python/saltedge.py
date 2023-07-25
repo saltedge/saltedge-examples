@@ -101,10 +101,10 @@ class SaltEdge:
         headers["Signature"] = self.generate_signature("PUT", expire, some_url, payload)
         return requests.put(some_url, data=payload, headers=headers)
 
-    def delete(self, some_url, payload):
+    def delete(self, some_url):
         expire = self.expires_at()
         headers = self.generate_headers(expire)
         headers["Signature"] = self.generate_signature(
-            "DELETE", expire, some_url, payload
+            "DELETE", expire, some_url
         )
-        return requests.delete(some_url, data=payload, headers=headers)
+        return requests.delete(some_url, headers=headers)
