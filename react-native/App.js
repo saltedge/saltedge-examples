@@ -6,7 +6,7 @@ export default class App extends React.Component {
   constructor(props) {
     super(props)
 
-    // NOTE: Customer id is returned when you create a customer using
+    // NOTE: Customer secret is returned when you create a customer using
     // https://docs.saltedge.com/v5_apps/reference/#customers-create
     // https://docs.saltedge.com/general/#authentication
 
