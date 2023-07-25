@@ -5,12 +5,9 @@ require "digest"
 require "rest-client"
 
 class Saltedge
-  attr_reader :app_id, :secret, :private_key
   EXPIRATION_TIME = 60
 
-  def self.verify_signature(public_key, data, signature)
-    public_key.verify(OpenSSL::Digest::SHA256.new, Base64.decode64(signature), data)
-  end
+  attr_reader :app_id, :secret, :private_key
 
   def initialize(app_id, secret, private_pem_path)
     @app_id      = app_id
@@ -18,12 +15,12 @@ class Saltedge
     @private_key = OpenSSL::PKey::RSA.new(File.open(private_pem_path))
   end
 
-  def request(method, url, params={})
+  def request(method, url, params = {})
     hash = {
       method:     method,
       url:        url,
       expires_at: (Time.now + EXPIRATION_TIME).to_i,
-      params:     as_json(params)
+      params:     params.to_json,
     }
 
     RestClient::Request.execute(
@@ -37,23 +34,17 @@ class Saltedge
         "Expires-at"   => hash[:expires_at],
         "Signature"    => sign_request(hash),
         "App-Id"       => app_id,
-        "Secret"       => secret
+        "Secret"       => secret,
       }
     )
-  rescue RestClient::Exception => error
-    pp JSON.parse(error.response)
+  rescue RestClient::Exception => e
+    pp JSON.parse(e.response)
   end
 
-private
+  private
 
   def sign_request(hash)
     data = "#{hash[:expires_at]}|#{hash[:method].to_s.upcase}|#{hash[:url]}|#{hash[:params]}"
-    pp data
-    Base64.encode64(private_key.sign(OpenSSL::Digest::SHA256.new, data)).delete("\n")
-  end
-
-  def as_json(params)
-    return "" if params.empty?
-    params.to_json
+    Base64.encode64(private_key.sign(OpenSSL::Digest.new('SHA256'), data)).delete("\n")
   end
 end
