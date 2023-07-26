@@ -1,28 +1,28 @@
-import React from 'react';
-import { StyleSheet, Dimensions } from 'react-native';
-import { WebView } from 'react-native-webview'
-import credentials from './credentials.json'
+import React from "react";
+import { StyleSheet, Dimensions } from "react-native";
+import { WebView } from "react-native-webview"
+import credentials from "./credentials.json"
 
 export function request(url, options) {
   var fetchOptions = {
     method: options.method,
     headers: {
-      'Accept':          'application/json',
-      'Content-Type':    'application/json',
-      'App-Id':          credentials.app_id,
-      'Secret':          credentials.secret,
+      "Accept":       "application/json",
+      "Content-Type": "application/json",
+      "App-Id":       credentials.app_id,
+      "Secret":       credentials.secret,
     }
   }
 
   if (options.customerSecret) {
-    fetchOptions.headers['Customer-Secret'] = options.customerSecret
+    fetchOptions.headers["Customer-Secret"] = options.customerSecret
   }
 
   if (options.loginSecret) {
-    fetchOptions.headers['Login-Secret'] = options.loginSecret
+    fetchOptions.headers["Login-Secret"] = options.loginSecret
   }
 
-  if (options.method != 'GET' && options.body) {
+  if (options.method != "GET" && options.body) {
     fetchOptions.body = JSON.stringify(options.body)
   }
 
@@ -34,6 +34,9 @@ export class SEWebView extends React.Component {
     if (!this.props.onCallback) {
       return
     }
+
+    // NOTE: get api callbacks data by message nativeEvent
+    // console.log("onMessage", event.nativeEvent.data);
 
     this.props.onCallback(JSON.parse(event.nativeEvent.data))
   }
@@ -50,8 +53,8 @@ export class SEWebView extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height
+    flex:   1,
+    height: Dimensions.get("window").height,
+    width:  Dimensions.get("window").width
   },
 });

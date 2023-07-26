@@ -1,6 +1,6 @@
-import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
-import { request, SEWebView } from './saltedge'
+import React from "react";
+import { StyleSheet, Text, View, Button } from "react-native";
+import { request, SEWebView } from "./saltedge"
 
 export default class App extends React.Component {
   constructor(props) {
@@ -12,7 +12,7 @@ export default class App extends React.Component {
 
     this.state = {
       connecting:     false,
-      customerSecret: ''
+      customerSecret: ""
     }
   }
 
@@ -25,11 +25,13 @@ export default class App extends React.Component {
         error_class:   data.error_class,
         error_message: data.error_message
       })
-    } else if (data.data.connect_url) {
+    }
+    else if (data.data.connect_url) {
       this.setState({
         connect_url: data.data.connect_url
       })
-    } else {
+    }
+    else {
       console.log(data)
     }
   }
@@ -40,15 +42,14 @@ export default class App extends React.Component {
     request("https://www.saltedge.com/api/v5/connect_sessions/create", {
       method:         "POST",
       customerSecret: this.state.customerSecret,
-      body: {
+      body:   {
         data: {
-          // We need to tell Salt Edge to use postMessage for callback notifications
-          javascript_callback_type: 'post_message',
+          javascript_callback_type: "post_message", // We need to tell Salt Edge to use postMessage for callback notifications
           consent: {
-            scopes: ['account_details', 'transactions_details']
+            scopes: ["account_details", "transactions_details"]
           },
           attempt: {
-            return_to: "saltedge://sdk.example",
+            return_to:    "saltedge://sdk.example",
             fetch_scopes: ["accounts", "transactions"]
           },
           include_fake_providers: true
@@ -59,8 +60,8 @@ export default class App extends React.Component {
   }
 
   onCallback(data) {
-    // {"data":{"login_id":"111","stage":"fetching","secret":"SECRET","custom_fields":{}}}
-    // {"data":{"login_id":"111","stage":"success","secret":"SECRET","custom_fields":{}}}
+    // {"data":{"connection_id":"111","stage":"fetching","secret":"SECRET","custom_fields":{}}}
+    // {"data":{"connection_id":"111","stage":"success","secret":"SECRET","custom_fields":{}}}
 
     this.setState({
       login: data.data,
@@ -71,9 +72,13 @@ export default class App extends React.Component {
   currentScreen() {
     if (this.state.connecting) {
       return <Text>Connecting...</Text>
-    } else if (this.state.error) {
+    }
+
+    if (this.state.error) {
       return <Text>{this.state.error_class}: {this.state.error_message}</Text>
-    } else if (this.state.stage == "success") {
+    }
+
+    if (this.state.stage == "success") {
       return (
         // NOTE: To retrieve login data, you need to call `request` function
         // with loginSecret set to this.state.login.secret, eg:
@@ -84,24 +89,28 @@ export default class App extends React.Component {
         // })
 
         <Text>
-          Login with id {this.state.login.login_id} connected. You can now use it
+          Login with id {this.state.login.connection_id} connected. You can now use it
           to query the API and retrieve its accounts and transactions.
           See https://docs.saltedge.com/v5_apps/reference/#accounts.
         </Text>
       )
-    } else if (this.state.stage == "error") {
+    }
+
+    if (this.state.stage == "error") {
       return <Text>Connect failed.</Text>
-    } else if (this.state.connect_url) {
+    }
+
+    if (this.state.connect_url) {
       return <SEWebView
         url={this.state.connect_url}
         onCallback={this.onCallback.bind(this)}
       />
-    } else {
-      return <Button
-        onPress={this.onConnect.bind(this)}
-        title="Connect"
-      />
     }
+
+    return <Button
+      onPress={this.onConnect.bind(this)}
+      title="Connect"
+    />
   }
 
   render() {
@@ -115,9 +124,9 @@ export default class App extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems:      "center",
+    backgroundColor: "#f4f8fa",
+    flex:            1,
+    justifyContent:  "center"
   },
 });
