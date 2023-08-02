@@ -2,11 +2,10 @@ import requests
 import base64
 import time
 
-from cryptography.exceptions import InvalidSignature
-from cryptography.hazmat.primitives import serialization, hashes
+from cryptography.exceptions                   import InvalidSignature
+from cryptography.hazmat.primitives            import serialization, hashes
 from cryptography.hazmat.primitives.asymmetric import padding
-from cryptography.hazmat.backends import default_backend
-
+from cryptography.hazmat.backends              import default_backend
 
 class SaltEdge:
     digest = "sha256"
@@ -33,6 +32,7 @@ class SaltEdge:
                 hashes.SHA256(),
             )
             return True
+
         except InvalidSignature:
             return False
 
@@ -57,54 +57,40 @@ class SaltEdge:
             )
         )
 
-    def generate_signature(self, method, expire, some_url, payload=""):
+    def generate_signature(self, method, expire, url, payload=""):
         """
         Generates base64 encoded SHA256 signature of the string given params, signed with the client's private key.
         :param method: uppercase method of the HTTP request. Example: GET, POST, PATCH, PUT, DELETE, etc.;
         :param expire: request expiration time as a UNIX timestamp in UTC timezone. Recommended value is 1 minute from now. The maximum value is 1 hour from now.
-        :param some_url: the full requested URL, with all its complementary parameters;
+        :param url: the full requested URL, with all its complementary parameters;
         :param payload: the request post body. Should be left empty if it is a GET request, or the body is empty;
         :return: base64 encoded SHA1 signature
         """
-        message = "{expire}|{method}|{some_url}|{payload}".format(**locals())
+        message = "{expire}|{method}|{url}|{payload}".format(**locals())
         return self.sign(message)
 
     def generate_headers(self, expire):
         return {
-            "Accept": "application/json",
+            "Accept":       "application/json",
             "Content-type": "application/json",
-            "Expires-at": expire,
-            "App-id": self.app_id,
-            "Secret": self.secret,
+            "Expires-at":   expire,
+            "App-id":       self.app_id,
+            "Secret":       self.secret,
         }
 
     def expires_at(self):
         return str(time.time() + 60)
 
-    def get(self, some_url):
-        expire = self.expires_at()
-        headers = self.generate_headers(expire)
-        headers["Signature"] = self.generate_signature("GET", expire, some_url)
-        return requests.get(some_url, headers=headers)
-
-    def post(self, some_url, payload):
-        expire = self.expires_at()
-        headers = self.generate_headers(expire)
+    def request(self, method, url, payload=""):
+        expire               = self.expires_at()
+        headers              = self.generate_headers(expire)
         headers["Signature"] = self.generate_signature(
-            "POST", expire, some_url, payload
+            method.upper(), expire, url, payload
         )
-        return requests.post(some_url, data=payload, headers=headers)
 
-    def put(self, some_url, payload):
-        expire = self.expires_at()
-        headers = self.generate_headers(expire)
-        headers["Signature"] = self.generate_signature("PUT", expire, some_url, payload)
-        return requests.put(some_url, data=payload, headers=headers)
+        make_request = getattr(requests, method.lower())
 
-    def delete(self, some_url, payload):
-        expire = self.expires_at()
-        headers = self.generate_headers(expire)
-        headers["Signature"] = self.generate_signature(
-            "DELETE", expire, some_url, payload
-        )
-        return requests.delete(some_url, data=payload, headers=headers)
+        if method.upper() == "GET":
+            return make_request(url, headers=headers)
+
+        return make_request(url, data=payload, headers=headers)
