@@ -2,7 +2,7 @@ asn1crypto==1.5.1
 certifi==2023.7.22
 cffi==1.15.1
 chardet==5.1.0
-cryptography==41.0.2
+cryptography==41.0.3
 idna==3.4
 pycparser==2.18
 requests==2.31.0
