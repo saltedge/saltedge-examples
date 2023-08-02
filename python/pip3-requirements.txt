@@ -7,4 +7,4 @@ idna==3.4
 pycparser==2.18
 requests==2.31.0
 six==1.16.0
-urllib3==1.26.2
+urllib3==1.26.5
