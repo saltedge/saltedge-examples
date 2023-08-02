@@ -13,10 +13,7 @@
  */
 
 require "SaltEdge.php";
-
-// Client access credentials
-define("APP_ID", "APP_ID");
-define("SECRET", "SECRET");
+require "credentials.php";
 
 // Private key details
 $scriptPath     = dirname(__FILE__);

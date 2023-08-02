@@ -2,75 +2,65 @@
 
 /**
  * Class SaltEdge
- * NOTE: The class allows re-usage, but as soon as it is not need the
- * shutdown method should be called in order erase the private key from the memory
+ * NOTE: The class allows re-usage, but as soon as it is not needed, the
+ * shutdown method should be called in order to erase the private key from the memory.
  */
 class SaltEdge
 {
     /**
-     * @var resource
+     * @var resource The private key resource used for signing requests.
      */
     private $privateKey;
 
     /**
-     * @var string
+     * @var string The App ID for authentication.
      */
-    private $clientId;
+    private $appId;
 
     /**
-     * @var string
+     * @var string The App Secret for authentication.
      */
-    private $serviceSecret;
+    private $secret;
 
     /**
-     * @var resource
+     * @var resource The cURL handle used for making requests.
      */
-    protected $curlHandle;
+    private $curlHandle;
 
     /**
-     * @var boolean
+     * @var boolean Indicates whether debugging of cURL requests is enabled.
      */
-    protected $debug = false;
+    private $debug = false;
 
     /**
-     * @param string      $clientId
-     * @param string      $serviceSecret
-     * @param string      $privateKeyPath
-     * @param null|string $privateKeyPass
+     * SaltEdge constructor.
      *
-     * @throws InvalidArgumentException when the path to the private key or the password was incorrect
+     * @param string      $appId           The App ID for authentication.
+     * @param string      $secret          The App Secret for authentication.
+     * @param string      $privateKeyPath  The file path to the private key.
+     * @param null|string $privateKeyPass  The password for the private key, if it's encrypted.
+     *
+     * @throws InvalidArgumentException When the path to the private key or the password was incorrect.
+     * @throws RuntimeException         When cURL library fails to initialize.
      */
     public function __construct($appId, $secret, $privateKeyPath, $privateKeyPass = null)
     {
-        $this->appId = $appId;
+        $this->appId  = $appId;
         $this->secret = $secret;
 
-        // Load the private key
-        $this->privateKey = openssl_get_privatekey($privateKeyPath, $privateKeyPass);
-
-        if ($this->privateKey === false) {
-            // There was an error loading the private key
-            // Either the path to the key is incorrect or the key password
-            throw new InvalidArgumentException("Could not load the private key.");
-        }
-
-        // Initialize cURL
-        $this->curlHandle = curl_init();
-
-        if ($this->curlHandle === false) {
-            // There was an error loading the private key
-            // Either the path to the key is incorrect or the key password
-            throw new RuntimeException("Could not initialize cURL library.");
-        }
+        $this->loadPrivateKey($privateKeyPath, $privateKeyPass);
+        $this->initializeCurl();
     }
 
     /**
-     * @param string      $clientId
-     * @param string      $serviceSecret
-     * @param string      $privateKeyPath
-     * @param null|string $privateKeyPass
+     * Factory method to create a new instance of the SaltEdge class.
      *
-     * @return static
+     * @param string      $appId           The App ID for authentication.
+     * @param string      $secret          The App Secret for authentication.
+     * @param string      $privateKeyPath  The file path to the private key.
+     * @param null|string $privateKeyPass  The password for the private key, if it's encrypted.
+     *
+     * @return static A new instance of the SaltEdge class.
      */
     public static function create($appId, $secret, $privateKeyPath, $privateKeyPass = null)
     {
@@ -78,115 +68,179 @@ class SaltEdge
     }
 
     /**
-     * @return resource
-     */
-    public function getCURLHandle()
-    {
-        return $this->curlHandle;
-    }
-
-    /**
-     * Enables the debugging of cURL requests by increasing verbosity of the library
+     * Enables or disables debugging of cURL requests by increasing verbosity of the library.
      *
-     * @param bool $value
+     * @param bool $value Whether to enable debugging or not.
      */
     public function setDebug($value = true)
     {
         $this->debug = $value;
     }
 
-
     /**
      * Erases the private key from the memory and closes the cURL handle.
-     * Should be called as soon as this object is not needed.
+     * Should be called as soon as this object is no longer needed.
      */
     public function shutdown()
     {
-        // Cleanup the key from memory
-        openssl_free_key($this->privateKey);
-        // Free up the cURL handler
-        curl_close($this->curlHandle);
-
+        $this->cleanup();
         $this->privateKey = null;
         $this->curlHandle = null;
     }
 
     /**
-     * @param string   $method  GET or POST
-     * @param string   $url     Url to which the request should be made
-     * @param mixed    $payload Payload to be sent in the request body
-     * @param int|null $expires Expiration timestamp
+     * Shortcut method that makes a GET request.
      *
-     * @throws LogicException   If the object has been shut down
-     * @throws Exception        If it fails to compute the signature of the request
-     * @throws RuntimeException If cURL fails to fulfill the request
-     * @return mixed
+     * @param string     $url    URL to which the GET request should be made.
+     * @param null|int   $expire Expiration timestamp.
+     *
+     * @return mixed The response received from the server.
+     * @throws LogicException   If the object has been shut down.
+     * @throws Exception        If it fails to compute the signature of the request.
+     * @throws RuntimeException If cURL fails to fulfill the request.
      */
-    public function request($method, $url, $payload = "", $expires = null)
+    public function get($url, $expire = null)
     {
-        // Check if by chance the object has been shut down
+        return $this->sendRequest('GET', $url, '', $expire);
+    }
+
+    /**
+     * Shortcut method that makes a POST request.
+     *
+     * @param string     $url     URL to which the POST request should be made.
+     * @param mixed      $payload Payload to be sent in the request body.
+     * @param null|int   $expire  Expiration timestamp.
+     *
+     * @return mixed The response received from the server.
+     * @throws LogicException   If the object has been shut down.
+     * @throws Exception        If it fails to compute the signature of the request.
+     * @throws RuntimeException If cURL fails to fulfill the request.
+     */
+    public function post($url, $payload, $expire = null)
+    {
+        return $this->sendRequest('POST', $url, $payload, $expire);
+    }
+
+    /**
+     * Shortcut method that makes a PUT request.
+     *
+     * @param string     $url     URL to which the PUT request should be made.
+     * @param mixed      $payload Payload to be sent in the request body.
+     * @param null|int   $expire  Expiration timestamp.
+     *
+     * @return mixed The response received from the server.
+     * @throws LogicException   If the object has been shut down.
+     * @throws Exception        If it fails to compute the signature of the request.
+     * @throws RuntimeException If cURL fails to fulfill the request.
+     */
+    public function put($url, $payload, $expire = null)
+    {
+        return $this->sendRequest('PUT', $url, $payload, $expire);
+    }
+
+    /**
+     * Shortcut method that makes a DELETE request.
+     *
+     * @param string     $url     URL to which the DELETE request should be made.
+     * @param null|mixed $payload Payload to be sent in the request body.
+     * @param null|int   $expire  Expiration timestamp.
+     *
+     * @return mixed The response received from the server.
+     * @throws LogicException   If the object has been shut down.
+     * @throws Exception        If it fails to compute the signature of the request.
+     * @throws RuntimeException If cURL fails to fulfill the request.
+     */
+    public function delete($url, $payload = null, $expire = null)
+    {
+        return $this->sendRequest('DELETE', $url, $payload, $expire);
+    }
+
+    /**
+     * Load the private key from the provided file path and password (if any).
+     *
+     * @param string     $privateKeyPath The file path to the private key.
+     * @param null|string $privateKeyPass The password for the private key, if it's encrypted.
+     *
+     * @throws InvalidArgumentException When the path to the private key or the password was incorrect.
+     */
+    private function loadPrivateKey($privateKeyPath, $privateKeyPass)
+    {
+        $this->privateKey = openssl_get_privatekey($privateKeyPath, $privateKeyPass);
+
+        if ($this->privateKey === false) {
+            throw new InvalidArgumentException("Could not load the private key.");
+        }
+    }
+
+    /**
+     * Initialize the cURL handle for making requests.
+     *
+     * @throws RuntimeException When cURL library fails to initialize.
+     */
+    private function initializeCurl()
+    {
+        $this->curlHandle = curl_init();
+
+        if ($this->curlHandle === false) {
+            throw new RuntimeException("Could not initialize cURL library.");
+        }
+    }
+
+    /**
+     * Clean up resources by freeing the private key and closing
+
+ the cURL handle.
+     */
+    private function cleanup()
+    {
+        openssl_free_key($this->privateKey);
+        curl_close($this->curlHandle);
+    }
+
+    /**
+     * Send an HTTP request with a computed signature based on the private key.
+     *
+     * @param string     $method  The HTTP method (GET, POST, PUT, DELETE).
+     * @param string     $url     URL to which the request should be made.
+     * @param mixed      $payload Payload to be sent in the request body.
+     * @param null|int   $expires Expiration timestamp.
+     *
+     * @return mixed The response received from the server.
+     * @throws LogicException   If the object has been shut down.
+     * @throws Exception        If it fails to compute the signature of the request.
+     * @throws RuntimeException If cURL fails to fulfill the request.
+     */
+    private function sendRequest($method, $url, $payload = "", $expires = null)
+    {
+        // Check if the object has been shut down
         if ($this->privateKey === null || $this->curlHandle === null) {
-            throw new LogicException("Failed to request using object that has been shut down.");
+            throw new LogicException("Failed to request using an object that has been shut down.");
         }
 
-        // Default expiration time to 3 minutes from now
         $expires = $expires ?: time() + 180;
-
-        // JSON encode the payload if it is not a string
         $payload = is_string($payload) ? $payload : json_encode($payload);
-
-        // Prepare the signature
         $data = $expires . "|" . $method . "|" . $url . "|" . $payload;
 
-        // Sign the data
-        $signingResult = openssl_sign(
-          $data,
-          $signature,
-          $this->privateKey,
-          OPENSSL_ALGO_SHA256
-        );
+        $signature = $this->computeSignature($data);
 
-        if (!$signingResult) {
-            // Preparing the signature failed.
-            throw new Exception('Failed to prepare the signature of the request.');
-        }
-
-        // The signature should be a base64 encoded string
-        $signature = base64_encode($signature);
-
-        // Prepare curl options
-        $curlOptions = array(
-            CURLOPT_URL => $url,
-            CURLOPT_HTTPHEADER => array(
+        $curlOptions = [
+            CURLOPT_URL        => $url,
+            CURLOPT_HTTPHEADER => [
                 "Content-Type: application/json",
-                "Expires-at: {$expires}",
-                "Signature: {$signature}",
-                "App-id: {$this->appId}",
-                "Secret: {$this->secret}",
-            ),
+                "Expires-at:   {$expires}",
+                "Signature:    {$signature}",
+                "App-id:       {$this->appId}",
+                "Secret:       {$this->secret}",
+            ],
             CURLOPT_RETURNTRANSFER => true,
-            // Enable for debugging purposes
-            CURLOPT_VERBOSE => $this->debug,
-        );
+            CURLOPT_VERBOSE        => $this->debug,
+        ];
 
-        // Set additional options needed for post requests
-        if ($method === 'POST') {
-            $curlOptions[CURLOPT_POST] = true;
-            $curlOptions[CURLOPT_POSTFIELDS] = $payload;
-        } elseif ($method == 'PUT' || $method == 'DELETE') {
-            $curlOptions[CURLOPT_CUSTOMREQUEST] = $method;
-            $curlOptions[CURLOPT_POSTFIELDS] = $payload;
-        } else {
-            $curlOptions[CURLOPT_HTTPGET] = true;
-        }
-
-        // Set the options in the curl handler
+        $this->setRequestMethodOptions($method, $payload, $curlOptions);
         curl_setopt_array($this->curlHandle, $curlOptions);
 
-        // Execute the http request
         $response = curl_exec($this->curlHandle);
 
-        // Throw an exception when the cURL library fails to fulfill the request
         if ($response === false) {
             throw new RuntimeException(curl_error($this->curlHandle));
         }
@@ -195,69 +249,42 @@ class SaltEdge
     }
 
     /**
-     * Shortcut method that makes a GET request
+     * Compute the request signature based on the provided data.
      *
-     * @param string   $url
-     * @param null|int $expire
+     * @param string $data The data to be signed.
      *
-     * @throws LogicException   If the object has been shut down
-     * @throws Exception        If it fails to compute the signature of the request
-     * @throws RuntimeException If cURL fails to fulfill the request
-     * @return mixed
+     * @return string The base64-encoded signature.
+     * @throws Exception If it fails to prepare the signature of the request.
      */
-    public function get($url, $expire = null)
+    private function computeSignature($data)
     {
-        return $this->request('GET', $url, "", $expire);
+        $signature = '';
+        openssl_sign($data, $signature, $this->privateKey, OPENSSL_ALGO_SHA256);
+
+        if (!$signature) {
+            throw new Exception('Failed to prepare the signature of the request.');
+        }
+
+        return base64_encode($signature);
     }
 
     /**
-     * Shortcut method that makes a POST request
+     * Set cURL options based on the HTTP method and payload.
      *
-     * @param string   $url
-     * @param mixed    $payload
-     * @param null|int $expire
-     *
-     * @throws LogicException   If the object has been shut down
-     * @throws Exception        If it fails to compute the signature of the request
-     * @throws RuntimeException If cURL fails to fulfill the request
-     * @return mixed
+     * @param string $method      The HTTP method (GET, POST, PUT, DELETE).
+     * @param string $payload     Payload to be sent in the request body.
+     * @param array  $curlOptions Reference to the cURL options array.
      */
-    public function post($url, $payload, $expire = null)
+    private function setRequestMethodOptions($method, $payload, array &$curlOptions)
     {
-        return $this->request('POST', $url, $payload, $expire);
-    }
-
-    /**
-     * Shortcut method that makes a PUT request
-     *
-     * @param string   $url
-     * @param mixed    $payload
-     * @param null|int $expire
-     *
-     * @throws LogicException   If the object has been shut down
-     * @throws Exception        If it fails to compute the signature of the request
-     * @throws RuntimeException If cURL fails to fulfill the request
-     * @return mixed
-     */
-    public function put($url, $payload, $expire = null)
-    {
-        return $this->request('PUT', $url, $payload, $expire);
-    }
-
-    /**
-     * Shortcut method that makes a PUT request
-     *
-     * @param string     $url
-     * @param null|mixed $payload
-     * @param null|int   $expire
-     *
-     * @throws LogicException   If the object has been shut down
-     * @throws Exception        If it fails to compute the signature of the request
-     * @throws RuntimeException If cURL fails to fulfill the request
-     * @return mixed
-     */
-    public function delete($url, $payload = null, $expire = null)
-    {
-        return $this->request('DELETE', $url, $payload, $expire);
+        if ($method === 'POST') {
+            $curlOptions[CURLOPT_POST]       = true;
+            $curlOptions[CURLOPT_POSTFIELDS] = $payload;
+        } elseif ($method == 'PUT' || $method == 'DELETE') {
+            $curlOptions[CURLOPT_CUSTOMREQUEST] = $method;
+            $curlOptions[CURLOPT_POSTFIELDS]    = $payload;
+        } else {
+            $curlOptions[CURLOPT_HTTPGET] = true;
+        }
     }
 }
