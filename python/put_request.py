@@ -1,10 +1,12 @@
 from saltedge import SaltEdge
+from credentials import APP_ID, SECRET, PRIVATE_KEY_PATH, CONNECTION_ID
 import json
 
-app = SaltEdge("app-id", "service-secret", "./private.pem")
+app = SaltEdge(APP_ID, SECRET, PRIVATE_KEY_PATH)
 
-url = "https://www.saltedge.com/api/v5/connections/1234/refresh"
-payload = json.dumps({"data": {"fetch_type": "recent"}})
-response = app.put(url, payload)
-data = response.json()
+url      = f"https://www.saltedge.com/api/v5/connections/{CONNECTION_ID}/refresh"
+payload  = json.dumps({"data": {"fetch_type": "recent"}})
+response = app.request("put", url, payload)
+data     = response.json()
+
 print(data)
