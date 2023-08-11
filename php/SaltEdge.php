@@ -219,8 +219,17 @@ class SaltEdge
 
         $expires = $expires ?: time() + 180;
         $payload = is_string($payload) ? $payload : json_encode($payload);
+
+        // Constructing the data for signature generation
+        // Example
+        // $expires = 1451606400;
+        // $method = "POST";
+        // $url = "https://api.example.com/v1/endpoint";
+        // $payload = '{"foo":"bar"}';
+        // $data = "1451606400|POST|https://api.example.com/v1/endpoint|{\"foo\":\"bar\"}";
         $data = $expires . "|" . $method . "|" . $url . "|" . $payload;
 
+        // Generating the signature using the private key
         $signature = $this->computeSignature($data);
 
         $curlOptions = [
