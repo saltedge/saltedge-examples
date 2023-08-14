@@ -90,7 +90,7 @@ class SaltEdge:
 
         make_request = getattr(requests, method.lower())
 
-        if method.upper() == "GET":
+        if method.upper() == "GET" or method.upper() == "DELETE":
             return make_request(url, headers=headers)
 
         return make_request(url, data=payload, headers=headers)
