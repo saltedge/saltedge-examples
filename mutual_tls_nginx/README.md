@@ -1,4 +1,4 @@
-Example of how to configure your server for Mutual TLS. This will let you verify that incoming request was made from `Gateway API`
+Example of how to configure your server for Mutual TLS. This will let you verify that incoming request was made from `Salt Edge Account Information API`
 
 # Usage
 1. Install Docker
