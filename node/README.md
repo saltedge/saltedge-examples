@@ -2,9 +2,9 @@
 
 After you clone this code, you should:
 
-1. Generate your private.pem and public.pem as described in [docs.saltedge.com](https://docs.saltedge.com/guides/signature/).
+1. Generate your private.pem and public.pem as described in [docs.saltedge.com](https://docs.saltedge.com/general/#signature).
 
-2. Put the public key content in your [dashboard](https://www.saltedge.com/keys_and_secrets).
+2. Put the public key content in your [dashboard](https://www.saltedge.com/clients/api_keys).
 
 3. Move to node example folder: `cd saltedge-examples/node`.
 
