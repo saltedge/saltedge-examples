@@ -1,16 +1,19 @@
-Example of integrating Salt Edge API with Node JS.
-Note, right after you clone this code, you should generate your private.pem and public.pem as described in [docs.saltedge.com](https://docs.saltedge.com/guides/signature/) and put the public key content in your [dashboard](https://www.saltedge.com/keys_and_secrets)
-Then paste private key's content into private.pem and create `credentials.json` with the following content:
+# Example of integrating Salt Edge API with Node JS.
 
-```
-{
-  "app_id": "YOUR_APP_ID",
-  "secret": "YOUR_SECRET"
-}
+After you clone this code, you should:
 
+1. Generate your private.pem and public.pem as described in [docs.saltedge.com](https://docs.saltedge.com/general/#signature).
 
+2. Put the public key content in your [dashboard](https://www.saltedge.com/clients/api_keys).
+
+3. Move to node example folder: `cd saltedge-examples/node`.
+
+4. Paste private key's content into private.pem.
+
+5. Put App Id and secret in `credentials.json`.
+
+6. Run commands:
 ```bash
-$ cd saltedge-examples/node
 $ npm install
 $ node saltedge.js
 ```
