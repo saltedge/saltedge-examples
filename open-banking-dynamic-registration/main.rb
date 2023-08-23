@@ -7,24 +7,26 @@ require_relative "keychain"
 require_relative "signer"
 
 payload = {
-  aud:                             "<openid-config.issuer>", # CHANGE REQUIRED
-  iss:                             Keychain.ssid,
-  software_id:                     Keychain.ssid,
-  software_statement:              Keychain.ssa.strip,
-  scope:                           Keychain.scope,
-  token_endpoint_auth_method:      "tls_client_auth", # Change method according to available methods in the openid-configuration
-  tls_client_auth_dn:              Keychain.transport_cert.subject.to_utf8,
-  request_object_signing_alg:      "PS256",
-  token_endpoint_auth_signing_alg: "PS256",
-  id_token_signed_response_alg:    "PS256",
-  application_type:                "web",
-  response_types:                  ["code id_token"],
-  redirect_uris: Keychain.redirect_uris,
-  grant_types: [
+  iss:                          Keychain.iss,
+  iat:                          Keychain.iat,
+  exp:                          Keychain.exp,
+  aud:                          "<openid-config.issuer>", # CHANGE REQUIRED
+  jti:                          Keychain.jti,
+  redirect_uris:                Keychain.redirect_uris,
+  token_endpoint_auth_method:   "tls_client_auth", # Change method according to available methods in the openid-configuration
+  grant_types:                  [
     "authorization_code",
     "refresh_token",
-    "client_credentials"
-  ]
+    "client_credentials",
+  ],
+  response_types:               ["code id_token"],
+  software_id:                  Keychain.ssid,
+  scope:                        Keychain.scope,
+  software_statement:           Keychain.ssa.strip,
+  application_type:             "web",
+  id_token_signed_response_alg: "PS256",
+  request_object_signing_alg:   "PS256",
+  tls_client_auth_dn:           Keychain.transport_cert.subject.to_utf8,
 }
 
 jwt = Signer.new(
@@ -34,7 +36,7 @@ jwt = Signer.new(
 
 options = {
   method: :post,
-  url: "<openid-config.registration_endpoint>", # CHANGE REQUIRED
+  url:     "<openid-config.registration_endpoint>", # CHANGE REQUIRED
   payload: jwt,
   headers: {
     "Content-Type": "application/jwt",

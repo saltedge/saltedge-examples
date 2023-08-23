@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
-gem 'jwt'
-gem 'rest-client'
-gem 'json'
-gem 'openssl'
-gem 'pry'
+gem "jwt"
+gem "rest-client"
+gem "json"
+gem "openssl"
+gem "pry"
