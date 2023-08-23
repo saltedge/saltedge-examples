@@ -16,6 +16,9 @@ This repository provides examples on integrating Salt Edge API with a C#/.NET ap
 - Settings are defined in the `SaltEdge.cs` file:
     - `APP_ID`: Your application ID.
     - `SECRET`: Your application secret.
+- To generate the required private.pem and public.pem keys for Salt Edge integration, please refer to the official SaltEdge's Signature Guide.
+
+  After generating the keys, ensure they are placed in the keys directory located at the root of your project.
 
 ### **Testing Requests:**
 - For sample requests, refer to the `Program.cs` file.
@@ -28,7 +31,9 @@ This repository provides examples on integrating Salt Edge API with a C#/.NET ap
 **CallbackServer** shows how to manage and validate callbacks from Salt Edge.
 
 ### **Settings:**
-- No additional settings required. Just ensure your `.pem` files are correctly set up as mentioned above.
+- To generate the required private.pem and public.pem keys for Salt Edge integration, please refer to the official SaltEdge's Signature Guide.
+
+  After generating the keys, ensure they are placed in the keys directory located at the root of your project.
 
 ### **Testing Callbacks:**
 - In the client dashboard, set up callback URLs. The URL format should be: `<host>/api/callback/:type`.
