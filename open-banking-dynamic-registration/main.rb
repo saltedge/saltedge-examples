@@ -2,16 +2,19 @@ require "json"
 require "yaml"
 require "rest-client"
 require "pry"
+require "securerandom"
 
 require_relative "keychain"
 require_relative "signer"
 
+jwt_lifetime = 30 # Current JWT lifetime set to 30 minutes, could be changed to any value
+
 payload = {
   iss:                          Keychain.iss,
-  iat:                          Keychain.iat,
-  exp:                          Keychain.exp,
+  iat:                          Time.now.to_i,
+  exp:                          (Time.now + jwt_lifetime * 60).to_i,
   aud:                          "<openid-config.issuer>", # CHANGE REQUIRED
-  jti:                          Keychain.jti,
+  jti:                          SecureRandom.uuid,
   redirect_uris:                Keychain.redirect_uris,
   token_endpoint_auth_method:   "tls_client_auth", # Change method according to available methods in the openid-configuration
   grant_types:                  [

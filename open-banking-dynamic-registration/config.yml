@@ -4,15 +4,6 @@ ssid: <*>
 # Organisation ID
 org_id: <*>
 
-# JWT ID
-jti: <*>
-
-# Time of issuance of request
-iat: <*>
-
-# Request Expiration time
-exp: <*>
-
 # Request Issuer
 iss: <*>
 

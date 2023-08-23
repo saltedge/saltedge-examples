@@ -6,9 +6,6 @@ Implementation is based on Open Banking Specification of the Dynamic Client Regi
 
 - Organization ID
 - Software Statement ID
-- JWT ID
-- Time of issuance of request
-- Request Expiration time
 - Signing Key + Signing Certificate + Signing Key ID
 - Transport Key + Transport Certificate + Transport Key ID
 - SSA
