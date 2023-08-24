@@ -6,21 +6,39 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace SESample
 {
     class SaltEdge
     {
         const int REQUEST_EXPIRES_MINUTES = 3;
-        const string APP_ID = "123";
-        const string SECRET = "123";
-        const string PRIVATE_KEY_PATH = @"keys/private.pem";
+
+        private static string APP_ID;
+        private static string SECRET;
+        private static string PRIVATE_KEY_PATH = @"keys/private.pem";
 
         private static RSA PRIVATE_KEY;
         private static readonly HttpClient client = new HttpClient();
 
         static SaltEdge()
         {
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false)
+                .Build();
+
+            var config = configuration.GetSection("SaltEdgeConfig");
+
+            APP_ID = config["AppId"];
+            SECRET = config["Secret"];
+            PRIVATE_KEY_PATH = config["PrivateKeyPath"];
+
+            if (string.IsNullOrEmpty(APP_ID) || string.IsNullOrEmpty(SECRET) || string.IsNullOrEmpty(PRIVATE_KEY_PATH))
+            {
+                throw new InvalidOperationException("SaltEdge configurations are missing in appsettings.json");
+            }
+
             PRIVATE_KEY = RSA.Create();
             PRIVATE_KEY.ImportFromPem(File.ReadAllText(PRIVATE_KEY_PATH));
         }

@@ -27,7 +27,7 @@ namespace SESample
             //
             // var payload = new {
             //     data = new {
-            //         identifier = "bbbbjjjj12rv1212f1efxchsdhbgv"
+            //         identifier = "your_customer_email@domain.com"
             //     }
             // };
 
