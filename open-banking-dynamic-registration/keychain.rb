@@ -2,7 +2,7 @@ require "openssl"
 
 module Keychain
   CERT_DIR = File.join(__dir__, "cert")
-  CONFIG = YAML.load_file(File.join(__dir__, "config.yml"))
+  CONFIG   = YAML.load_file(File.join(__dir__, "config.yml"))
 
   class << self
     def ssa
@@ -11,7 +11,8 @@ module Keychain
 
     def method_missing(method_name)
       method_name_str = method_name.to_s
-      name  = method_name_str.split("_")[0..-2].join("_")
+      name            = method_name_str.split("_")[0..-2].join("_")
+
       if method_name_str.end_with?("_key")
         key(name)
       elsif method_name_str.end_with?("_cert") || method_name_str.end_with?("_pem")

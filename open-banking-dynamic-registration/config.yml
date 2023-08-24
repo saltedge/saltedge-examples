@@ -4,6 +4,9 @@ ssid: <*>
 # Organisation ID
 org_id: <*>
 
+# Request Issuer
+iss: <*>
+
 # These should match the key/certificate pair you put inside the cert directory
 signing_key_id: <*>
 transport_key_id: <*>
@@ -12,6 +15,6 @@ transport_key_id: <*>
 # the rest of the scopes can be adjusted according to your needs
 scope: openid accounts payments
 
-# Modify this list to match the one in your software statement
+# Registered URIs the TPP will use to interact with the ASPSP AS
 redirect_uris:
   - https://example.com/oauth/callback

@@ -1,3 +1,5 @@
+# Open Banking Dynamic Registration
+Implementation is based on Open Banking Specification of the Dynamic Client Registration [documentation](https://openbanking.atlassian.net/wiki/spaces/DZ/pages/937066600/Dynamic+Client+Registration+-+v3.1).
 ## Requirements
 
 > **Everything (except the private keys) can be found on the software statement page!**
