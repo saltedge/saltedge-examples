@@ -32,7 +32,7 @@ public class SaltEdge {
     HttpURLConnection con = buildRequest("GET", url);
 
     if (con == null) {
-    return "";
+        return "";
     }
 
     // Add request header
