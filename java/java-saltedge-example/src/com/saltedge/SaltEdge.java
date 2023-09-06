@@ -17,47 +17,47 @@ import java.util.Calendar;
 
 public class SaltEdge {
 
-    public final static int REQUEST_EXPIRES_MINUTES = 3;
-    public final static String APP_ID               = "APP_ID";
-    public final static String SECRET               = "SECRET";
-    public final String PRIVATE_KEY_PATH            = "private.pem";
+	public final static int REQUEST_EXPIRES_MINUTES = 3;
+	public final static String APP_ID = "APP_ID";
+	public final static String SECRET = "SECRET";
+	public final String PRIVATE_KEY_PATH = "private.pem";
 	private static PEMKeyPair PRIVATE_KEY = null;
 
 	public SaltEdge() {
-        PRIVATE_KEY = SignHelper.readPrivateKey(PRIVATE_KEY_PATH);
-    }
+    PRIVATE_KEY = SignHelper.readPrivateKey(PRIVATE_KEY_PATH);
+  }
 
 	// HTTP GET request
 	public String get(String url) {
- 
 		HttpURLConnection con = buildRequest("GET", url);
+
 		if (con == null) {
 			return "";
-		} 
-		//add request header
+		}
+
+		// Add request header
 		long expires = generateExpiresAt();
 		con.setRequestProperty("Signature", generateSignature("GET", expires, url, ""));
 		con.setRequestProperty("Expires-at", String.valueOf(expires));
 		con.setRequestProperty("Content-Type", "application/json");
 		con.setRequestProperty("Accept", "application/json");
- 
+
 		return processResponse(con);
 	}
-	
+
 	// HTTP POST request
 	public String post(String url, Object payload) {
- 
 		HttpURLConnection con = buildRequest("POST", url);
 
 		if (con == null) {
 			return "";
 		}
-		
-		//add request header
+
+		// Add request header
 		long expires = generateExpiresAt();
 		con.setRequestProperty("Expires-at", String.valueOf(expires));
 
-		//generate json
+		// Generate json
 		Gson gson = new Gson();
 		String json = gson.toJson(payload);
 
@@ -66,6 +66,7 @@ public class SaltEdge {
 		con.setRequestProperty("Accept", "application/json");
 		con.setDoOutput(true);
 		DataOutputStream wr;
+
 		try {
 			wr = new DataOutputStream(con.getOutputStream());
 			wr.writeBytes(json);
@@ -75,16 +76,18 @@ public class SaltEdge {
 			System.out.println("IOException : " + e);
 			e.printStackTrace();
 		}
+
 		return processResponse(con);
 	}
-	
+
 	private String processResponse(HttpURLConnection con) {
 		BufferedReader in;
 		StringBuffer response = new StringBuffer();
+
 		try {
 			in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 			String inputLine;
-	 
+
 			while ((inputLine = in.readLine()) != null) {
 				response.append(inputLine);
 			}
@@ -93,11 +96,11 @@ public class SaltEdge {
 			System.out.println("IOException : " + e);
 			e.printStackTrace();
 		}
+
 		return response.toString();
 	}
-	
-	private HttpURLConnection buildRequest(String method, String url)
-    {
+
+	private HttpURLConnection buildRequest(String method, String url) {
 		HttpURLConnection con = null;
 
 		try {
@@ -114,19 +117,22 @@ public class SaltEdge {
 			System.out.println("IOException : " + e);
 			e.printStackTrace();
 		}
-        return con;
-    }
-	
+
+    return con;
+  }
+
 	private long generateExpiresAt() {
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.MINUTE, REQUEST_EXPIRES_MINUTES);
+
 		return calendar.getTimeInMillis() / 1000;
-    }
-	
+  }
+
 	private String generateSignature(String method, long expires, String url, String postBody) {
-        String signature    = String.format("%d|%s|%s|%s", expires, method, url, postBody);
-        byte[] bytes        = signature.getBytes();
-        byte[] shaSignature = null;
+		String signature = String.format("%d|%s|%s|%s", expires, method, url, postBody);
+		byte[] bytes = signature.getBytes();
+		byte[] shaSignature = null;
+
 		try {
 			shaSignature = sign(bytes);
 		} catch (SignatureException e) {
@@ -137,12 +143,13 @@ public class SaltEdge {
 			e.printStackTrace();
 		}
 
-        return Base64.toBase64String(shaSignature);
-    }
+    return Base64.toBase64String(shaSignature);
+  }
 
     private byte[] sign(byte[] bytes) throws SignatureException, PEMException {
-    	  KeyPair keyPair=null;
-    	  Signature signature = null;
+    	KeyPair keyPair=null;
+    	Signature signature = null;
+
 		try {
 			signature = Signature.getInstance("SHA256withRSA");
 			signature.initSign(new JcaPEMKeyConverter().getPrivateKey(PRIVATE_KEY.getPrivateKeyInfo()));
@@ -156,8 +163,8 @@ public class SaltEdge {
 		} catch (SignatureException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}        
-  	  return signature.sign();
-    }
+		}
 
+  	return signature.sign();
+  }
 }
