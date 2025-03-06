@@ -25,7 +25,7 @@ function signedHeaders(url, method, params) {
 }
 
 // Use this function to verify signature in callbacks
-// https://docs.saltedge.com/account_information/v5/#callbacks-request_identification
+// https://docs.saltedge.com/v6/#callbacks-request-identification
 //
 // signature - could be obtained from headers['signature']
 // callback_url - url that you add in SE dashboard
@@ -67,7 +67,7 @@ function request(options) {
   });
 }
 
-url = "https://www.saltedge.com/api/v5/countries"
+url = "https://www.saltedge.com/api/v6/countries"
 
 request({
   method:  "GET",
@@ -79,7 +79,7 @@ request({
 })
 
 
-url    = "https://www.saltedge.com/api/v5/customers"
+url    = "https://www.saltedge.com/api/v6/customers"
 params = {
   data: {
     identifier: "my_unique_sdidentifier"

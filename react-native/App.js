@@ -6,13 +6,13 @@ export default class App extends React.Component {
   constructor(props) {
     super(props)
 
-    // NOTE: Customer secret is returned when you create a customer using
-    // https://docs.saltedge.com/v5_apps/reference/#customers-create
-    // https://docs.saltedge.com/general/#authentication
+    // NOTE: Customer id is returned when you create a customer using
+    // https://docs.saltedge.com/v6/#authentication
+    // https://docs.saltedge.com/v6/api_reference#ais-customers-create
 
     this.state = {
-      connecting:     false,
-      customerSecret: ""
+      connecting: false,
+      customerId: "" // Set customer id after Customer creation
     }
   }
 
@@ -26,9 +26,9 @@ export default class App extends React.Component {
         error_message: data.error_message
       })
     }
-    else if (data.data.connect_url) {
+    else if (data.connect_url) {
       this.setState({
-        connect_url: data.data.connect_url
+        connect_url: data.connect_url
       })
     }
     else {
@@ -39,29 +39,33 @@ export default class App extends React.Component {
   onConnect() {
     this.setState({connecting: true})
 
-    request("https://www.saltedge.com/api/v5/connect_sessions/create", {
-      method:         "POST",
-      customerSecret: this.state.customerSecret,
+    request("https://www.saltedge.com/api/v6/connections/connect", {
+      method: "POST",
       body:   {
         data: {
-          javascript_callback_type: "post_message", // We need to tell Salt Edge to use postMessage for callback notifications
-          consent: {
-            scopes: ["account_details", "transactions_details"]
+          customer_id: this.state.customerId,
+          consent:     {
+            scopes: ["accounts", "transactions"]
           },
           attempt: {
-            return_to:    "saltedge://sdk.example",
-            fetch_scopes: ["accounts", "transactions"]
+            fetch_scopes: ["accounts", "transactions"],
+            return_to:    "saltedge://sdk.example"
           },
-          include_fake_providers: true
+          widget: {
+            javascript_callback_type: "post_message" // We need to tell Salt Edge to use postMessage for callback notifications
+          },
+          provider: {
+            include_sandboxes: true
+          }
         }
       }
     }).then(this.onApiResponse.bind(this))
-    .catch(error => console.error(error))
+      .catch(error => console.error(error))
   }
 
   onCallback(data) {
-    // {"data":{"connection_id":"111","stage":"fetching","secret":"SECRET","custom_fields":{}}}
-    // {"data":{"connection_id":"111","stage":"success","secret":"SECRET","custom_fields":{}}}
+    // {"data":{"connection_id":"111","stage":"fetching","customer_id":"111","custom_fields":{}}}
+    // {"data":{"connection_id":"111","stage":"success","customer_id":"111","custom_fields":{}}}
 
     this.setState({
       login: data.data,
@@ -82,16 +86,16 @@ export default class App extends React.Component {
       return (
         // NOTE: To retrieve login data, you need to call `request` function
         // with loginSecret set to this.state.login.secret, eg:
-        // request("https://www.saltedge.com/api/v5/accounts", {
-        //   method:         "GET",
-        //   customerSecret: this.state.customerSecret,
-        //   loginSecret:    this.state.login.secret
+        // request("https://www.saltedge.com/api/v6/accounts", {
+        //   method:        "GET",
+        //   customer_id:   this.state.customerId,
+        //   connection_id: this.state.login.connection_id
         // })
 
         <Text>
           Login with id {this.state.login.connection_id} connected. You can now use it
           to query the API and retrieve its accounts and transactions.
-          See https://docs.saltedge.com/v5_apps/reference/#accounts.
+          See https://docs.saltedge.com/v6/api_reference#ais-accounts.
         </Text>
       )
     }

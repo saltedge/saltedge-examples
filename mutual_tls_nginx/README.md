@@ -45,7 +45,7 @@ openssl req -new -x509 -days 365 -key ca.key -out ca.crt
     ```
 
 
-To add client keys to your profile, please see [guide from docs](https://docs.salsedge.com/guides/callbacks#mutual_tls).
+To add client keys to your profile, please see [guide from docs](https://docs.saltedge.com/v6/#callbacks-request-identification).
 
 ## How to test mutual TLS
 You can make a request using client certificate and private key. If client certificate was generated using same CA certificate as prompted in `nginx.conf` `ssl_client_certificate` you will get a status `200 OK`

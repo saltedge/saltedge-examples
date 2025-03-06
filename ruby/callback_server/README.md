@@ -22,7 +22,7 @@ The application provides an API endpoint to receive incoming POST requests with 
 POST /api/callbacks/:type
 ```
 
-- `:type`: Specify the type of callback. This can be any string value representing the type of notification you want to receive. The full list of callback types can be found [here](https://docs.saltedge.com/account_information/v5/#callbacks).
+- `:type`: Specify the type of callback. This can be any string value representing the type of notification you want to receive. The full list of callback types can be found [here](https://docs.saltedge.com/v6/api_reference#ais-callbacks).
 
 #### Signature Verification
 
@@ -55,8 +55,8 @@ curl -X POST \
       "stage": "finish"
     },
     "meta": {
-      "version": "5",
-      "time": "2023-07-03T08:45:32.233Z"
+      "version": "6",
+      "time": "2025-01-25T10:40:47.965Z"
     }
   }'
 ```
@@ -72,7 +72,7 @@ In this example, the `data` field contains information about the successful call
 
 The `meta` field provides additional metadata about the callback:
 
-- `version`: The version of the callback (in this example, it's version "5").
+- `version`: The version of the callback (in this example, it's version "6").
 - `time`: The timestamp when the callback occurred, represented in ISO 8601 format.
 
 ## Important Notes
