@@ -2,7 +2,7 @@
 
 After you clone this code, you should:
 
-1. Generate your private.pem and public.pem as described in [docs.saltedge.com](ttps://docs.saltedge.com/v6/#security-signature).
+1. Generate your private.pem and public.pem as described in [docs.saltedge.com](https://docs.saltedge.com/v6/#security-signature).
 
 2. Put the public key content in your [dashboard](https://www.saltedge.com/clients/api_keys).
 

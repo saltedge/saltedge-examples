@@ -84,7 +84,8 @@ function request(options) {
   });
 }
 
-url = "https://www.saltedge.com/api/v6/countries"
+// get countries
+let url = "https://www.saltedge.com/api/v6/countries"
 
 request({
   method:  "GET",
@@ -92,6 +93,7 @@ request({
 }).then(data => console.log(data))
   .catch(data => console.error(data))
 
+// create a customer
 url    = "https://www.saltedge.com/api/v6/customers"
 params = {
   data: {
