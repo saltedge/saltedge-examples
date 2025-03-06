@@ -14,7 +14,7 @@ namespace SESample
             // ****** GET request example ******
             // *********************************
 
-            System.Console.WriteLine(await SaltEdge.getAsync("https://www.saltedge.com/api/v5/countries"));
+            System.Console.WriteLine(await SaltEdge.getAsync("https://www.saltedge.com/api/v6/countries"));
 
 
 
@@ -31,7 +31,7 @@ namespace SESample
             //     }
             // };
 
-            // string result = await SaltEdge.postAsync("https://www.saltedge.com/api/v5/customers/", payload);
+            // string result = await SaltEdge.postAsync("https://www.saltedge.com/api/v6/customers/", payload);
             // System.Console.WriteLine(result);
             System.Console.ReadKey();
         }

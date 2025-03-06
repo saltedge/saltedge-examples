@@ -45,7 +45,7 @@ describe "Saltedge" do
   describe "#verify_signature" do
     it "verifies signature" do
       url       = "https://www.client.com/api/callbacks/success"
-      params    = {data: {login_id: 1234, customer_id: 4321, custom_fields: {}}, meta: {version: "3", time: "2017-01-03T13:00:28Z"}}
+      params    = {data: {connection_id: 1234, customer_id: 4321, custom_fields: {}}, meta: {version: "6", time: "2025-01-03T13:00:28Z"}}
       data      = "#{url}|#{params}"
       signature = "ZwaDZmysX5MhucepoFcqCNNPY/yDAaqzfnHRwbnlzxgTz925dtlX3nWYgeWWwp0W2nxzK8PNd0yndgohmm790BarN4x88CxhvB+nPl2sUChyxMRoqa3ybXTKHFJXutuJZPUctBZqIU1rSEqqg99D4NTNj43GpigLubiPM6qZto7mvuMqP7HQ/ymJPa4CeKQKBO0Zg196keCX76X8XTyWL0CjxyPER3tZ9DEyPQvcwMXmbO8zO9ZoVeJ1JTeiqYJrvUbZg9Ncw0aK3469iYtp+wCu5p3PFx0lou3Nn8/W9fKuQMVWEl03Ura52w9x7YU6D6enDta6/9IRuq10xKkuDg=="
 

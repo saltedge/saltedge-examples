@@ -28,7 +28,7 @@ function signedHeaders(url, method, params) {
 }
 
 // Use this function to verify signature in callbacks. The verification can be performed on connect_session callbacks.
-// https://docs.saltedge.com/account_information/v5/#callbacks-request_identification
+// https://docs.saltedge.com/v6/#callbacks-request-identification
 //
 // signature   - could be obtained from headers["signature"]
 // callbackUrl - url that you add in SE dashboard, as example: https://client-app.com/aisp/callbacks/success
@@ -85,7 +85,7 @@ function request(options) {
 }
 
 // get countries
-let url = "https://www.saltedge.com/api/v5/countries";
+let url = "https://www.saltedge.com/api/v6/countries"
 
 request({
   method:  "GET",
@@ -94,7 +94,7 @@ request({
   .catch(data => console.error(data))
 
 // create a customer
-url    = "https://www.saltedge.com/api/v5/customers"
+url    = "https://www.saltedge.com/api/v6/customers"
 params = {
   data: {
     identifier: "my_unique_sdidentifier" // customer email
@@ -110,22 +110,27 @@ request({
   .catch(data => console.error(data))
 
 // created customer data example:
-// { "data": { "id": "[customer_id]", "identifier": "[customer_identifier]", "created_at": "2023-08-14T14:47:52Z", "updated_at": "2023-08-14T14:47:52Z", "secret": "[customer_secret]" } }
+// { "data": { "id": "[customer_id]", "identifier": "[customer_identifier]", "created_at": "2025-01-14T14:47:52Z", "updated_at": "2025-01-14T14:47:52Z", "secret": "[customer_secret]" } }
 
 // create connect session (after create customer)
-url = "https://www.saltedge.com/api/v5/connect_sessions/create";
+url = "https://www.saltedge.com/api/v6/connections/connect";
 
 params = {
   data: {
     customer_id: "", // set customer id that was gotten after customer create
     consent: {
-      scopes: ["account_details", "transactions_details"]
+      scopes: ["accounts", "transactions"]
     },
     attempt: {
       return_to:    "https://www.example.com",
       fetch_scopes: ["accounts", "transactions"]
     },
-    include_fake_providers: true
+    widget: {
+      javascript_callback_type: "post_message" // We need to tell Salt Edge to use postMessage for callback notifications
+    },
+    provider: {
+      include_sandboxes: true
+    }
   }
 }
 

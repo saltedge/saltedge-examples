@@ -14,14 +14,6 @@ export function request(url, options) {
     }
   }
 
-  if (options.customerSecret) {
-    fetchOptions.headers["Customer-Secret"] = options.customerSecret
-  }
-
-  if (options.loginSecret) {
-    fetchOptions.headers["Login-Secret"] = options.loginSecret
-  }
-
   if (options.method != "GET" && options.body) {
     fetchOptions.body = JSON.stringify(options.body)
   }

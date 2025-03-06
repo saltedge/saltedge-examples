@@ -51,13 +51,14 @@ Add the cert pass phrase to keys.txt (keys.txt should contain no spaces and no n
     ```
 
 3. To test a mutual request to our servers:
-    add client keys to your profile, please see [guide from docs](https://docs.saltedge.com/account_information/v5/#mutual_tls).
+    add client keys to your profile, please see [guide from docs](https://docs.saltedge.com/v6/#callbacks-request-identification).
 
 ## Build docker image and run (5):
 
 ```
 docker build -t mutual-nginx . && docker run -p 4433:443 -p 8080:80 mutual-nginx
 ```
+
 ## How to test mutual TLS
 You can make a request using client certificate and private key. If client certificate was generated using same CA certificate as prompted in `nginx.conf` `ssl_client_certificate` you will get a status `200 OK`
 

@@ -4,7 +4,7 @@ import json
 
 app = SaltEdge(APP_ID, SECRET, PRIVATE_KEY_PATH)
 
-url      = "https://www.saltedge.com/api/v5/customers/"
+url      = "https://www.saltedge.com/api/v6/customers/"
 payload  = json.dumps({ "data": { "identifier": "some_uniq_identifier" } })
 response = app.request("post", url, payload)
 data     = response.json()

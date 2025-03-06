@@ -4,7 +4,7 @@ This repository provides examples on integrating Salt Edge API with a C#/.NET ap
 1. Making requests to Salt Edge (via **RequestsApp**).
 2. Implementing callbacks with signature validation (via **CallbackServer**).
 
-**Important**: Before you proceed, ensure you've generated the required `private.pem` and `public.pem` files. Follow the steps detailed in [SaltEdge's Signature Guide](https://docs.saltedge.com/guides/signature/) to do so. Once generated, upload the public key content to your [SaltEdge Dashboard](https://www.saltedge.com/keys_and_secrets).
+**Important**: Before you proceed, ensure you've generated the required `private.pem` and `public.pem` files. Follow the steps detailed in [SaltEdge's Signature Guide](https://docs.saltedge.com/v6/#security-signature) to do so. Once generated, upload the public key content to your [SaltEdge Dashboard](https://www.saltedge.com/clients/api_keys).
 
 ---
 

@@ -11,9 +11,9 @@ public class Program {
     String str = "{ \"data\": {\"identifier\": \"javaTestCustom\" }}";
     JsonElement jelement = new JsonParser().parse(str);
     JsonObject jobject = jelement.getAsJsonObject();
-    System.out.println("POST request: \n" + new SaltEdge().post("https://www.saltedge.com/api/v5/customers", jobject));
+    System.out.println("POST request: \n" + new SaltEdge().post("https://www.saltedge.com/api/v6/customers", jobject));
 
     // GET request example:
-    System.out.println("\nGET request: \n" + new SaltEdge().get("https://www.saltedge.com/api/v5/countries"));
+    System.out.println("\nGET request: \n" + new SaltEdge().get("https://www.saltedge.com/api/v6/countries"));
   }
 }
